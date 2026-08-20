@@ -479,7 +479,7 @@ function renderBubble(message: Message, styles: PhoneStyles): SafeHtml {
 
     return html`
         <div class="flex max-w-[84%] flex-col ${isOutgoing ? "items-end self-end" : "items-start"}">
-            <div class="rounded-[17px] px-2.5 pb-2 pt-2 text-(length:--bubble-text) font-medium leading-[1.36] whitespace-pre-wrap break-words ${isOutgoing ? `rounded-br-[5px] ${styles.outgoingBubble}` : `rounded-bl-[5px] ${styles.incomingBubble}`}">${escapeHtml(message.text.trim())}</div>
+            <div class="rounded-[17px] px-2.5 pb-2 pt-2 text-(length:--bubble-text) font-medium leading-[1.36] whitespace-pre-wrap wrap-anywhere ${isOutgoing ? `rounded-br-[5px] ${styles.outgoingBubble}` : `rounded-bl-[5px] ${styles.incomingBubble}`}">${escapeHtml(message.text.trim())}</div>
             ${caption}
         </div>
     `;

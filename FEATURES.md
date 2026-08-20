@@ -27,6 +27,8 @@ Keep it updated when a feature is added, removed, or intentionally changed.
       Reset, and applied identically to the preview and to both exports.
       Saves from before the Bubbles card get the defaults, which are the
       previous look.
+- [x] A word wider than a bubble wraps inside it instead of pushing the
+      bubble off the screen.
 
 ## Language and persistence
 
