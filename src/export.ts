@@ -1,5 +1,6 @@
-import { snapshotElement, canvasToBlob } from "./snapshot.js";
-import { DEFAULT_EXPORT_HEIGHT, DEFAULT_EXPORT_WIDTH } from "./state.ts";
+import { ensure } from "./dom.ts";
+import { snapshotElement, canvasToBlob } from "./snapshot.ts";
+import { DEFAULT_EXPORT_HEIGHT, DEFAULT_EXPORT_WIDTH, type MockupState } from "./state.ts";
 
 export const EXPORT_SCALE = 1;
 
@@ -8,6 +9,13 @@ export const EXPORT_SCALE = 1;
 // regardless of the window the user happens to have open.
 const FRAME_HEIGHT = 760;
 
+export type ExportOptions = {
+    phoneShell: HTMLElement;
+    includeFrame: boolean;
+    width?: number;
+    height?: number;
+};
+
 /**
  * Renders the current preview to a PNG blob.
  *
@@ -15,43 +23,33 @@ const FRAME_HEIGHT = 760;
  * "With frame" is a fixed phone: long conversations are pinned to the bottom,
  * exactly like a screenshot of a real device. Dimensions are disabled for this
  * mode because changing them would distort the device frame.
- *
- * @param {{ phoneShell: HTMLElement, includeFrame: boolean, width?: number, height?: number }} options
- * @returns {Promise<Blob>}
  */
-export async function renderExportBlob({ phoneShell, includeFrame, width = DEFAULT_EXPORT_WIDTH, height = DEFAULT_EXPORT_HEIGHT }) {
+export async function renderExportBlob({ phoneShell, includeFrame, width = DEFAULT_EXPORT_WIDTH, height = DEFAULT_EXPORT_HEIGHT }: ExportOptions): Promise<Blob> {
     const stage = document.createElement("div");
     stage.className = "snapshot-stage fixed -left-[100000px] top-0 -z-10 pointer-events-none";
     stage.setAttribute("aria-hidden", "true");
     stage.inert = true;
 
-    const shell = phoneShell.cloneNode(true);
+    const shell = ensure(phoneShell.cloneNode(true), HTMLElement, "the phone shell clone");
     stripIds(shell);
     shell.classList.add("is-export");
 
-    const screen = shell.querySelector(".phone-screen");
-    const sourceScreen = phoneShell.querySelector(".phone-screen");
-    let target = shell;
+    const screen = ensure(shell.querySelector(".phone-screen"), HTMLElement, "the cloned phone screen");
+    const sourceScreen = ensure(phoneShell.querySelector(".phone-screen"), HTMLElement, "the phone screen");
+    let target: HTMLElement = shell;
 
     if (includeFrame) {
         shell.style.height = `${FRAME_HEIGHT}px`;
         shell.style.width = "auto";
         stage.appendChild(shell);
     } else {
-        const chatScreen = screen.querySelector(".chat-screen");
+        const chatScreen = ensure(screen.querySelector(".chat-screen"), HTMLElement, "the chat screen");
 
-        if (!chatScreen) {
-            throw new Error("The preview does not contain a chat screen");
-        }
-
+        // The screen's look (platform-*/theme-* markers and the utility classes
+        // behind them) lives on `.phone-screen`; the detached `.chat-screen`
+        // needs the same classes and custom properties to render identically.
         sourceScreen.classList.forEach((className) => {
             if (className !== "phone-screen") {
-                chatScreen.classList.add(className);
-            }
-        });
-
-        screen.classList.forEach((className) => {
-            if (className.startsWith("platform-") || className.startsWith("theme-")) {
                 chatScreen.classList.add(className);
             }
         });
@@ -63,7 +61,13 @@ export async function renderExportBlob({ phoneShell, includeFrame, width = DEFAU
         chatScreen.style.minHeight = `${height}px`;
         chatScreen.style.borderRadius = "0";
         chatScreen.style.overflow = "visible";
-        chatScreen.querySelector(".chat-messages")?.style.setProperty("overflow", "visible");
+
+        const messages = chatScreen.querySelector(".chat-messages");
+
+        if (messages instanceof HTMLElement) {
+            messages.style.overflow = "visible";
+        }
+
         stage.appendChild(chatScreen);
         target = chatScreen;
     }
@@ -85,11 +89,11 @@ export async function renderExportBlob({ phoneShell, includeFrame, width = DEFAU
     }
 }
 
-export function exportFileName({ platform, theme, includeFrame }) {
+export function exportFileName({ platform, theme, includeFrame }: Pick<MockupState, "platform" | "theme" | "includeFrame">): string {
     return `chat-mockup-generator-${platform}-${theme}${includeFrame ? "-iphone" : ""}.png`;
 }
 
-export function downloadBlob(blob, fileName) {
+export function downloadBlob(blob: Blob, fileName: string): void {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
 
@@ -102,7 +106,7 @@ export function downloadBlob(blob, fileName) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export function canCopyImages() {
+export function canCopyImages(): boolean {
     return typeof ClipboardItem === "function" && typeof navigator.clipboard?.write === "function";
 }
 
@@ -111,22 +115,22 @@ export function canCopyImages() {
  * set up synchronously inside the user gesture, so the ClipboardItem is handed
  * the pending blob rather than awaited first.
  */
-export function copyBlobToClipboard(blobPromise) {
+export function copyBlobToClipboard(blobPromise: Promise<Blob>): Promise<void> {
     const item = new ClipboardItem({ "image/png": blobPromise });
 
     return navigator.clipboard.write([item]);
 }
 
-function stripIds(root) {
+function stripIds(root: Element): void {
     root.removeAttribute("id");
     root.querySelectorAll("[id]").forEach((element) => element.removeAttribute("id"));
 }
 
-function copyCustomProperties(source, target) {
+function copyCustomProperties(source: Element, target: HTMLElement): void {
     const computed = getComputedStyle(source);
 
     for (let index = 0; index < computed.length; index += 1) {
-        const property = computed[index];
+        const property = computed.item(index);
 
         if (property.startsWith("--")) {
             target.style.setProperty(property, computed.getPropertyValue(property));
@@ -138,10 +142,10 @@ function copyCustomProperties(source, target) {
  * Scroll offsets do not survive serialisation, so when the conversation is
  * taller than the fixed screen, shift it up by the overflow instead.
  */
-function pinToBottom(messages) {
+function pinToBottom(messages: Element | null): void {
     const inner = messages?.firstElementChild;
 
-    if (!messages || !inner) {
+    if (!(messages instanceof HTMLElement) || !(inner instanceof HTMLElement)) {
         return;
     }
 
@@ -153,6 +157,6 @@ function pinToBottom(messages) {
     }
 }
 
-function nextFrame() {
-    return new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+function nextFrame(): Promise<void> {
+    return new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
 }

@@ -12,24 +12,26 @@
  *  - Scroll offsets are not serialised; callers position content explicitly.
  */
 
+import { ensure } from "./dom.ts";
+
 const SVG_NS = "http://www.w3.org/2000/svg";
 const XHTML_NS = "http://www.w3.org/1999/xhtml";
 const PSEUDO_ELEMENTS = ["::before", "::after"];
 
-/**
- * @param {Element} element  Laid-out element to rasterise.
- * @param {object} [options]
- * @param {number} [options.scale=2]    Device pixels per CSS pixel.
- * @param {number} [options.padding=0]  CSS pixels of transparent margin around the element,
- *                                      for shadows or children that stick out of its box.
- * @returns {Promise<HTMLCanvasElement>}
- */
-export async function snapshotElement(element, { scale = 2, padding = 0 } = {}) {
+export type SnapshotOptions = {
+    /** Device pixels per CSS pixel. */
+    scale?: number;
+    /** CSS pixels of transparent margin around the element, for shadows or children that stick out of its box. */
+    padding?: number;
+};
+
+/** Rasterises a laid-out element. */
+export async function snapshotElement(element: Element, { scale = 2, padding = 0 }: SnapshotOptions = {}): Promise<HTMLCanvasElement> {
     const rect = element.getBoundingClientRect();
     const width = Math.ceil(rect.width) + padding * 2;
     const height = Math.ceil(rect.height) + padding * 2;
 
-    const pseudoRules = [];
+    const pseudoRules: string[] = [];
     const clone = cloneWithStyles(element, pseudoRules);
 
     const wrapper = document.createElementNS(XHTML_NS, "div");
@@ -76,19 +78,19 @@ export async function snapshotElement(element, { scale = 2, padding = 0 } = {}) 
     return canvas;
 }
 
-export function canvasToBlob(canvas, type = "image/png") {
+export function canvasToBlob(canvas: HTMLCanvasElement, type = "image/png"): Promise<Blob> {
     return new Promise((resolve, reject) => {
         canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error("Could not encode the image"))), type);
     });
 }
 
 /** Deep-clones a node, baking every computed style into inline styles. */
-function cloneWithStyles(source, pseudoRules) {
-    const clone = source.cloneNode(false);
-
-    if (source.nodeType !== Node.ELEMENT_NODE) {
-        return clone;
+function cloneWithStyles(source: Node, pseudoRules: string[]): Node {
+    if (!(source instanceof Element)) {
+        return source.cloneNode(false);
     }
+
+    const clone = ensure(source.cloneNode(false), Element, "the clone of an element");
 
     clone.setAttribute("style", serializeDeclarations(getComputedStyle(source)));
 
@@ -112,39 +114,44 @@ function cloneWithStyles(source, pseudoRules) {
     return clone;
 }
 
-function serializeDeclarations(computed) {
-    const declarations = [];
+function serializeDeclarations(computed: CSSStyleDeclaration): string {
+    const declarations: string[] = [];
 
     for (let index = 0; index < computed.length; index += 1) {
-        const property = computed[index];
+        const property = computed.item(index);
         declarations.push(`${property}:${computed.getPropertyValue(property)}`);
     }
 
     return declarations.join(";");
 }
 
-function loadImage(url) {
-    return new Promise((resolve, reject) => {
-        const image = new Image();
+async function loadImage(url: string): Promise<HTMLImageElement> {
+    const image = new Image();
 
-        image.onload = () => resolve(image);
+    await new Promise<void>((resolve, reject) => {
+        image.onload = () => resolve();
         image.onerror = () => reject(new Error("The browser could not rasterise the preview"));
         image.src = url;
-    }).then((image) => (image.decode ? image.decode().then(() => image, () => image) : image));
+    });
+
+    // decode() can reject for an SVG that draws perfectly well; the outcome is advisory.
+    await image.decode().catch(() => undefined);
+
+    return image;
 }
 
 /**
  * Safari occasionally paints nothing on the first drawImage of a foreignObject
  * SVG. The centre of every export is opaque, so sample it and retry if blank.
  */
-async function drawUntilPainted(context, image, width, height) {
+async function drawUntilPainted(context: CanvasRenderingContext2D, image: HTMLImageElement, width: number, height: number): Promise<void> {
     for (let attempt = 0; attempt < 4; attempt += 1) {
         context.drawImage(image, 0, 0, width, height);
 
         const { canvas } = context;
         const pixel = context.getImageData(Math.floor(canvas.width / 2), Math.floor(canvas.height / 2), 1, 1).data;
 
-        if (pixel[3] > 0) {
+        if ((pixel[3] ?? 0) > 0) {
             return;
         }
 
