@@ -1,5 +1,5 @@
 import { snapshotElement, canvasToBlob } from "./snapshot.js";
-import { DEFAULT_EXPORT_HEIGHT, DEFAULT_EXPORT_WIDTH } from "./state.js";
+import { DEFAULT_EXPORT_HEIGHT, DEFAULT_EXPORT_WIDTH } from "./state.ts";
 
 export const EXPORT_SCALE = 1;
 

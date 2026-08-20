@@ -1,0 +1,20 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          # Keep in step with the Bun that last wrote bun.lock; an older Bun
+          # ignores a newer lockfile and --frozen-lockfile then fails.
+          bun-version: "1.3.14"
+      - run: bun install --frozen-lockfile
+      - run: bun run check
+      - run: bun run build

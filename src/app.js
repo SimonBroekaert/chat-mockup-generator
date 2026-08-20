@@ -1,5 +1,5 @@
 import { icon, hydrateIcons } from "./icons.js";
-import { createTranslator, normalizeLanguage } from "./i18n.js";
+import { createTranslator, normalizeLanguage } from "./i18n.ts";
 import {
     PLATFORMS,
     THEMES,
@@ -23,7 +23,7 @@ import {
     saveAppTheme,
     loadState,
     saveState,
-} from "./state.js";
+} from "./state.ts";
 import { renderExportBlob, exportFileName, downloadBlob, canCopyImages, copyBlobToClipboard } from "./export.js";
 
 const SAVE_DELAY = 220;
