@@ -1,13 +1,11 @@
 {
     "name": "chat-mockup-generator",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "private": true,
-    "description": "A browser-based chat mockup generator.",
+    "description": "A browser-based chat mockup generator. Static files, no build step, no runtime dependencies.",
+    "type": "module",
     "scripts": {
-        "serve": "python3 -m http.server 8765"
-    },
-    "type": "commonjs",
-    "dependencies": {
-        "lucide": "^1.28.0"
+        "serve": "python3 -m http.server 8765",
+        "test": "node --test"
     }
 }
