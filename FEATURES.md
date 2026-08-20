@@ -43,13 +43,19 @@ Keep it updated when a feature is added, removed, or intentionally changed.
 - [x] Snapshot the live DOM preview instead of maintaining a second renderer.
 - [x] Copy the PNG to the clipboard when the browser supports `ClipboardItem`.
 - [x] Export Instagram, Messenger, and WhatsApp in both light and dark themes.
+- [x] A conversation taller than the export ends on the newest message and
+      the composer, in both the app-only and the iPhone-frame export.
+- [x] The export buttons stay clickable while the toast is hidden.
 
 ## Local development checks
 
 ```bash
-bun run build:css
-bun run serve
-bun test
+bun install      # dev tooling only (Tailwind, TypeScript, Bun's types); the site has no runtime dependencies
+bun run serve    # compiles Tailwind, then serves http://127.0.0.1:8765 — TypeScript sources served directly
+bun run check    # typecheck (both tsconfigs) + the no-any checker + the tests
+bun run build    # compiles Tailwind, then bundles index.html into dist/; `bun run serve dist` previews it
 ```
 
 The app must be served over HTTP because the entry point uses ES modules.
+Export changes are verified by exporting every platform in both themes and
+opening the PNGs; a passing test suite says nothing about the pixels.
