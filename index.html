@@ -15,7 +15,7 @@
         />
         <script type="module" src="src/app.js"></script>
     </head>
-    <body class="min-h-screen min-w-[320px] bg-slate-50 font-sans text-slate-950 antialiased transition-colors dark:bg-zinc-950 dark:text-zinc-50">
+    <body class="h-screen min-w-[320px] overflow-hidden bg-slate-50 font-sans text-slate-950 antialiased transition-colors dark:bg-zinc-950 dark:text-zinc-50 max-[820px]:h-auto max-[820px]:min-h-screen max-[820px]:overflow-auto">
         <header class="topbar sticky top-0 z-20 h-16 border-b border-slate-200/80 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">
             <div class="topbar-inner mx-auto flex h-full w-full max-w-[1600px] items-center justify-between gap-6 px-8 max-[540px]:gap-2 max-[540px]:px-3">
                 <a class="brand inline-flex min-w-0 shrink-0 items-center gap-2.5 text-slate-950 no-underline dark:text-zinc-50" href="./" aria-label="Chat Mockup Generator home">
@@ -48,7 +48,7 @@
             </div>
         </header>
 
-        <main class="generator-layout mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-[1600px] grid-cols-[444px_minmax(0,1fr)] max-[1120px]:grid-cols-[400px_minmax(0,1fr)] max-[820px]:flex max-[820px]:min-h-0 max-[820px]:flex-col">
+        <main class="generator-layout mx-auto grid h-[calc(100vh-4rem)] min-h-0 w-full max-w-[1600px] grid-cols-[444px_minmax(0,1fr)] overflow-hidden max-[1120px]:grid-cols-[400px_minmax(0,1fr)] max-[820px]:h-auto max-[820px]:min-h-0 max-[820px]:overflow-visible max-[820px]:flex max-[820px]:flex-col">
             <aside class="editor-column flex min-h-0 min-w-0 flex-col overflow-y-auto border-r border-slate-200 bg-white px-7 py-8 dark:border-zinc-800 dark:bg-zinc-950 max-[1120px]:px-6 max-[820px]:max-h-none max-[820px]:overflow-visible max-[820px]:border-r-0 max-[820px]:border-b max-[820px]:px-[18px] max-[820px]:py-7 max-[540px]:px-3.5" aria-label="Mockup settings" data-i18n-aria="editor.aria">
                 <div class="editor-sections flex flex-col gap-3 max-[820px]:grid max-[820px]:grid-cols-2 max-[820px]:items-start max-[540px]:flex">
                     <section class="editor-section ui-card rounded-xl border border-slate-200 bg-white p-5 text-slate-950 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50">
@@ -137,7 +137,7 @@
                             <span class="section-index inline-flex rounded-md bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-slate-500 dark:bg-zinc-800 dark:text-zinc-400">03</span>
                         </div>
 
-                        <div class="message-editor-list mt-4 flex max-h-[520px] flex-col gap-3 overflow-y-auto pr-1 max-[820px]:grid max-[820px]:max-h-none max-[820px]:grid-cols-2 max-[820px]:overflow-visible max-[540px]:flex max-[540px]:max-h-[430px] max-[540px]:overflow-y-auto" id="message-editor-list"></div>
+                        <div class="message-editor-list mt-4 flex max-h-none flex-col gap-3 overflow-visible max-[820px]:grid max-[820px]:grid-cols-2 max-[540px]:flex" id="message-editor-list"></div>
 
                         <button class="add-message-button ui-button ui-button-secondary mt-3 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border border-dashed border-violet-300 bg-violet-50 px-4 text-sm font-semibold text-violet-700 transition hover:bg-violet-100 dark:border-violet-800 dark:bg-violet-950/30 dark:text-violet-300 dark:hover:bg-violet-950/60" id="add-message-button" type="button">
                             <span class="add-message-icon" data-icon="plus" aria-hidden="true"></span>
@@ -195,7 +195,7 @@
                 </div>
             </aside>
 
-            <section class="preview-column flex min-h-0 min-w-0 flex-col bg-slate-50/60 px-10 py-3 dark:bg-zinc-900/50 max-[1120px]:px-6 max-[820px]:min-h-[850px] max-[820px]:px-[18px] max-[820px]:py-4 max-[540px]:min-h-[740px] max-[540px]:px-3.5" aria-label="Live preview" data-i18n-aria="preview.aria">
+            <section class="preview-column flex min-h-0 min-w-0 flex-col overflow-hidden bg-slate-50/60 px-10 py-3 dark:bg-zinc-900/50 max-[1120px]:px-6 max-[820px]:min-h-[850px] max-[820px]:overflow-visible max-[820px]:px-[18px] max-[820px]:py-4 max-[540px]:min-h-[740px] max-[540px]:px-3.5" aria-label="Live preview" data-i18n-aria="preview.aria">
                 <div class="preview-toolbar flex min-h-6 items-center justify-between gap-5">
                     <div>
                         <div class="eyebrow text-[10px] font-extrabold uppercase tracking-[0.14em] text-violet-600 dark:text-violet-400" data-i18n="preview.eyebrow">Live preview</div>
@@ -209,8 +209,8 @@
                     </div>
                 </div>
 
-                <div class="preview-stage relative mt-2 flex min-h-0 flex-1 items-start justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 px-4 py-1 dark:border-zinc-800 dark:bg-zinc-900 max-[820px]:items-center max-[820px]:min-h-[720px] max-[820px]:py-2 max-[540px]:min-h-[650px] max-[540px]:rounded-xl">
-                    <div class="phone-shell relative z-10 h-[min(900px,calc(100vh-200px))] w-auto aspect-[402/874] rounded-[59px] border border-zinc-700 bg-gradient-to-br from-zinc-500 via-zinc-900 to-zinc-950 p-2.5 shadow-2xl shadow-zinc-950/25 max-[820px]:h-[min(700px,calc(100vh-180px))] max-[540px]:h-auto max-[540px]:w-[min(78vw,320px)]" id="phone-shell">
+                <div class="preview-stage relative mt-2 flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 px-4 py-1 dark:border-zinc-800 dark:bg-zinc-900 max-[820px]:min-h-[720px] max-[820px]:py-2 max-[540px]:min-h-[650px] max-[540px]:rounded-xl">
+                    <div class="phone-shell relative z-10 h-full max-h-full max-w-full w-auto aspect-[402/874] rounded-[59px] border border-zinc-700 bg-gradient-to-br from-zinc-500 via-zinc-900 to-zinc-950 p-2.5 shadow-2xl shadow-zinc-950/25" id="phone-shell">
                         <div class="phone-button phone-button-left phone-button-one absolute -left-1 top-32 z-0 h-8 w-1 rounded-l-sm bg-gradient-to-b from-zinc-400 to-zinc-800" aria-hidden="true"></div>
                         <div class="phone-button phone-button-left phone-button-two absolute -left-1 top-44 z-0 h-14 w-1 rounded-l-sm bg-gradient-to-b from-zinc-400 to-zinc-800" aria-hidden="true"></div>
                         <div class="phone-button phone-button-right absolute -right-1 top-40 z-0 h-20 w-1 rounded-r-sm bg-gradient-to-b from-zinc-400 to-zinc-800" aria-hidden="true"></div>

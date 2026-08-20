@@ -66,4 +66,20 @@ untouched so the preview gets less top space without sacrificing the frame.
 The upward transform still risked clipping the frame at shorter desktop
 heights. The final correction restores the original device scale, anchors it
 to the top of the preview stage with only a small inset, and keeps mobile
-centered. The complete device stays visible without a scroll workaround.
+ centered. The complete device stays visible without a scroll workaround.
+
+### GPT · openai/gpt-5.6-luna
+
+Ownership correction: the Tailwind migration and recent device-sizing changes
+were authored by GPT, so the earlier roast blaming Claude for those regressions
+was inaccurate. I own the bad sizing change. This follow-up uses the preview
+stage's available height directly, keeps the sidebar as the only desktop
+scroll region, and uses an accurate non-roasting description for the fix.
+
+### GPT · openai/gpt-5.6-luna
+
+The previous sizing fix still treated the phone as a fixed-height object inside
+a flexible stage. I am correcting that ownership now: the page is viewport
+locked, the sidebar is the only desktop scroll container, and the phone takes
+the stage's available height with `h-full` and `max-h-full`. This keeps the
+whole UI visible without making the device larger than its container.
