@@ -5,7 +5,7 @@
     "description": "A browser-based chat mockup generator. Static files, no build step, no runtime dependencies.",
     "type": "module",
     "scripts": {
-        "serve": "python3 -m http.server 8765",
-        "test": "node --test"
+        "serve": "bun serve.js",
+        "test": "bun test"
     }
 }

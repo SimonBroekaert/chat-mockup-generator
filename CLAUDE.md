@@ -17,6 +17,8 @@ Two humans build it together: one drives Claude, the other drives GPT.
 - **Static site. Zero runtime dependencies. No build step.** `index.html` +
   `app.css` at the root, ES modules under `src/`. If you find yourself reaching
   for a bundler, a framework, or a `<script src="node_modules/...">`, stop.
+- **Bun is the dev runtime** — it serves (`serve.js`) and runs the tests. That is
+  tooling, not a dependency: the shipped site is still plain files.
 - Vanilla JS (ES2022+), 4-space indent, double quotes, semicolons. Keep it boring.
 - Must be served over HTTP (ES modules don't load from `file://`).
 
@@ -27,21 +29,23 @@ Two humans build it together: one drives Claude, the other drives GPT.
 | `index.html` | Markup. Static strings carry `data-i18n` / `data-i18n-aria` keys. |
 | `app.css` | All styling. Chat-screen colours are CSS custom properties on `.phone-screen`, switched by `platform-*` and `theme-*` classes. |
 | `src/app.js` | Entry point: state wiring, rendering, event delegation. |
-| `src/state.js` | Defaults, normalisation, time helpers, `localStorage` load/save. Pure — testable in Node. |
+| `src/state.js` | Defaults, normalisation, time helpers, `localStorage` load/save. Pure — no DOM, runs under `bun test`. |
 | `src/i18n.js` | NL/EN translation tables and `createTranslator()`. Dutch is the fallback. |
 | `src/icons.js` | Inline SVG icons (Lucide, ISC; brand marks from Simple Icons, CC0). `icon(name)` returns a string. |
 | `src/snapshot.js` | DOM → SVG `<foreignObject>` → canvas → PNG. Generic; knows nothing about chats. |
 | `src/export.js` | Builds the offscreen export clone (app-only vs. with-frame) and calls the snapshot. |
-| `test/` | `node --test` unit tests for the pure modules. |
+| `test/` | `bun test` unit tests for the pure modules. |
+| `serve.js` | Bun dev server (static files, no caching). Dev-only; not part of the site. |
 
 ## Commands
 
 ```bash
-npm run serve   # python3 -m http.server 8765 → http://localhost:8765
-npm test        # node --test   (Node 20+, no install needed)
+bun run serve   # serve.js → http://127.0.0.1:8765  (PORT=… HOST=… to override)
+bun test        # runs test/*.test.js
 ```
 
-There is nothing to install. `node_modules/` is gitignored and should stay empty.
+There is nothing to `bun install`; the only tool you need is Bun 1.x itself.
+`node_modules/` and `bun.lock` are gitignored and should stay absent.
 
 ## Invariants — read before changing anything
 
@@ -65,7 +69,7 @@ There is nothing to install. `node_modules/` is gitignored and should stay empty
 
 ## Testing
 
-- Pure logic (`state.js`, `i18n.js`) gets a `node --test` case. Run `npm test`
+- Pure logic (`state.js`, `i18n.js`) gets a `bun test` case. Run `bun test`
   before committing.
 - Visual/export changes: serve the app, export all three platforms in both
   themes, and actually open the PNGs. "It renders in the preview" is not
