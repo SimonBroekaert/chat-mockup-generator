@@ -2,19 +2,19 @@
 
 Browser-based chat mockup generator for Instagram, Messenger, and WhatsApp-style conversations.
 
-Static HTML, CSS and ES modules. No build step, no runtime dependencies, nothing to install.
+Static HTML, CSS and ES modules. No build step, no runtime dependencies. [Bun](https://bun.sh) serves and tests it locally — that is the only tool you need.
 
 ## Run locally
 
 The app uses ES modules, so it has to be served over HTTP (opening `index.html` from disk won't work).
 
 ```bash
-npm run serve          # python3 -m http.server 8765
-# or, without npm:
-python3 -m http.server 8765
+bun run serve          # or: bun serve.js
 ```
 
 Open [http://localhost:8765](http://localhost:8765). Stop the server with `Ctrl+C`.
+It binds to `127.0.0.1:8765`; override with `PORT=… HOST=… bun run serve`
+(`HOST=0.0.0.0` to open it on your phone over the LAN).
 
 ## Features
 
@@ -35,17 +35,18 @@ Open [http://localhost:8765](http://localhost:8765). Stop the server with `Ctrl+
 | `index.html` | Markup. Translatable strings carry `data-i18n` keys. |
 | `app.css` | Styling. Chat colours are CSS custom properties on `.phone-screen`, switched by `platform-*` / `theme-*` classes. |
 | `src/app.js` | Entry point: wires state to the DOM, rendering, event delegation. |
-| `src/state.js` | Defaults, validation/normalisation, time helpers, storage. Pure, runs in Node. |
+| `src/state.js` | Defaults, validation/normalisation, time helpers, storage. Pure, no DOM. |
 | `src/i18n.js` | Translation tables and `createTranslator()`. |
 | `src/icons.js` | Inline SVG icons (Lucide, ISC; brand marks from Simple Icons, CC0). |
 | `src/snapshot.js` | Generic DOM → SVG `<foreignObject>` → canvas → PNG. |
 | `src/export.js` | Builds the offscreen export clone (app-only / with frame) and snapshots it. |
-| `test/` | Unit tests for the pure modules. |
+| `test/` | Unit tests for the pure modules (`bun test`). |
+| `serve.js` | Bun dev server for local development. Not part of the site. |
 
 ## Tests
 
 ```bash
-npm test               # node --test (Node 20+)
+bun test
 ```
 
 Covers time normalisation, state repair from corrupt storage, language migration, and translation table parity.
