@@ -24,6 +24,12 @@ export const EXPORT_HEIGHT_MIN = 400;
 export const EXPORT_HEIGHT_MAX = 2000;
 export const DEFAULT_EXPORT_WIDTH = 402;
 export const DEFAULT_EXPORT_HEIGHT = 650;
+export const BUBBLE_TEXT_SIZE_MIN = 8;
+export const BUBBLE_TEXT_SIZE_MAX = 20;
+export const DEFAULT_BUBBLE_TEXT_SIZE = 11;
+export const BUBBLE_SPACING_MIN = 0;
+export const BUBBLE_SPACING_MAX = 24;
+export const DEFAULT_BUBBLE_SPACING = 8;
 
 export type Message = {
     id: string;
@@ -41,6 +47,14 @@ export type MockupState = {
     otherName: string;
     exportWidth: number;
     exportHeight: number;
+    /** Font size of the bubble text, in CSS pixels of the PNG. The caption and the tick follow it: see bubbleSizes(). */
+    bubbleTextSize: number;
+    /** Vertical space between bubbles, in CSS pixels. */
+    bubbleSpacing: number;
+    /** The time under each bubble. */
+    showTimestamps: boolean;
+    /** The double tick under sent bubbles. */
+    showReadReceipts: boolean;
     messages: Message[];
 };
 
@@ -88,7 +102,35 @@ export function createDefaultState(language: Language = DEFAULT_LANGUAGE): Mocku
         otherName: DEFAULT_NAME,
         exportWidth: DEFAULT_EXPORT_WIDTH,
         exportHeight: DEFAULT_EXPORT_HEIGHT,
+        bubbleTextSize: DEFAULT_BUBBLE_TEXT_SIZE,
+        bubbleSpacing: DEFAULT_BUBBLE_SPACING,
+        showTimestamps: true,
+        showReadReceipts: true,
         messages: createExampleMessages(language),
+    };
+}
+
+// ---------------------------------------------------------------------------
+// Bubbles
+// ---------------------------------------------------------------------------
+
+/** Sizes inside a bubble, in CSS pixels. */
+export type BubbleSizes = {
+    text: number;
+    caption: number;
+    tick: number;
+};
+
+/**
+ * Derives the caption (time) and tick sizes from the text size, so one slider
+ * keeps the proportions of the original design: 11px text, 7px caption, 12px
+ * tick. Integers, like everything else the user can set.
+ */
+export function bubbleSizes(textSize: number): BubbleSizes {
+    return {
+        text: textSize,
+        caption: Math.round((textSize * 7) / 11),
+        tick: Math.round((textSize * 12) / 11),
     };
 }
 
@@ -144,14 +186,21 @@ export function addMinutes(time: string, minutes: number): string {
     return formatTime(Math.floor(total / 60), total % 60);
 }
 
-export function normalizeExportDimension(value: unknown, fallback: number, minimum: number, maximum: number): number {
-    const dimension = Number(value);
+/** Rounds and clamps a number-ish value; anything that is not a finite number becomes the fallback. */
+export function normalizeInteger(value: unknown, fallback: number, minimum: number, maximum: number): number {
+    // Number() would read null, "" and true as 0, 0 and 1; only numbers and numeric strings count.
+    const number = typeof value === "number" ? value : typeof value === "string" && value.trim() !== "" ? Number(value) : NaN;
 
-    if (!Number.isFinite(dimension)) {
+    if (!Number.isFinite(number)) {
         return fallback;
     }
 
-    return Math.min(maximum, Math.max(minimum, Math.round(dimension)));
+    return Math.min(maximum, Math.max(minimum, Math.round(number)));
+}
+
+/** Only a real boolean counts; "true", 1 and friends become the fallback. */
+export function normalizeBoolean(value: unknown, fallback: boolean): boolean {
+    return typeof value === "boolean" ? value : fallback;
 }
 
 // ---------------------------------------------------------------------------
@@ -210,10 +259,15 @@ export function normalizeState(saved: unknown, language: Language = DEFAULT_LANG
     return {
         platform: isPlatform(platform) ? platform : fallback.platform,
         theme: isTheme(theme) ? theme : fallback.theme,
-        includeFrame: source["includeFrame"] === true,
+        includeFrame: normalizeBoolean(source["includeFrame"], fallback.includeFrame),
         otherName: hasName ? otherName.slice(0, NAME_MAX_LENGTH) : fallback.otherName,
-        exportWidth: normalizeExportDimension(source["exportWidth"], fallback.exportWidth, EXPORT_WIDTH_MIN, EXPORT_WIDTH_MAX),
-        exportHeight: normalizeExportDimension(source["exportHeight"], fallback.exportHeight, EXPORT_HEIGHT_MIN, EXPORT_HEIGHT_MAX),
+        exportWidth: normalizeInteger(source["exportWidth"], fallback.exportWidth, EXPORT_WIDTH_MIN, EXPORT_WIDTH_MAX),
+        exportHeight: normalizeInteger(source["exportHeight"], fallback.exportHeight, EXPORT_HEIGHT_MIN, EXPORT_HEIGHT_MAX),
+        // Saves from before the Bubbles card have none of these; the fallbacks are today's look.
+        bubbleTextSize: normalizeInteger(source["bubbleTextSize"], fallback.bubbleTextSize, BUBBLE_TEXT_SIZE_MIN, BUBBLE_TEXT_SIZE_MAX),
+        bubbleSpacing: normalizeInteger(source["bubbleSpacing"], fallback.bubbleSpacing, BUBBLE_SPACING_MIN, BUBBLE_SPACING_MAX),
+        showTimestamps: normalizeBoolean(source["showTimestamps"], fallback.showTimestamps),
+        showReadReceipts: normalizeBoolean(source["showReadReceipts"], fallback.showReadReceipts),
         messages: isArray(messages) ? messages.map(normalizeMessage) : fallback.messages,
     };
 }

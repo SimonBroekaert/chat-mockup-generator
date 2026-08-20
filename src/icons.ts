@@ -54,15 +54,25 @@ function isBrandIcon(name: IconName): name is BrandIconName {
     return Object.hasOwn(BRAND_ICONS, name);
 }
 
-/** Returns inline SVG markup for a named icon. Trusted: every byte comes from the tables above. */
+/** Default icon size in CSS pixels, the same 16px as `h-4 w-4`. */
+const ICON_SIZE = 16;
+
+/**
+ * Returns inline SVG markup for a named icon. Trusted: every byte comes from the tables above.
+ *
+ * The default size is a presentation attribute, not a utility class: a
+ * `width="16"` attribute loses to any stylesheet rule, so `h-3 w-3` from the
+ * caller wins no matter where Tailwind puts `.h-3` relative to `.h-4`.
+ */
 export function icon(name: IconName, className = ""): SafeHtml {
-    const classes = className ? `icon block h-4 w-4 shrink-0 ${className}` : "icon block h-4 w-4 shrink-0";
+    const classes = className ? `icon block shrink-0 ${className}` : "icon block shrink-0";
+    const attributes = `class="${classes}" width="${ICON_SIZE}" height="${ICON_SIZE}" viewBox="0 0 24 24"`;
 
     if (isBrandIcon(name)) {
-        return trustedHtml(`<svg class="${classes}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${BRAND_ICONS[name]}</svg>`);
+        return trustedHtml(`<svg ${attributes} fill="currentColor" aria-hidden="true">${BRAND_ICONS[name]}</svg>`);
     }
 
-    return trustedHtml(`<svg class="${classes}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${STROKE_ICONS[name]}</svg>`);
+    return trustedHtml(`<svg ${attributes} fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${STROKE_ICONS[name]}</svg>`);
 }
 
 /**

@@ -15,6 +15,21 @@ Keep it updated when a feature is added, removed, or intentionally changed.
       minutes after the previous message, including across midnight.
 - [x] User-entered names and messages are escaped before rendering.
 
+## Bubbles
+
+- [x] Set the bubble text size in pixels (8–20, default 11). The timestamp
+      and the read-receipt tick scale with it, keeping the proportions of the
+      11px design (7px caption, 12px tick).
+- [x] Set the space between bubbles in pixels (0–24, default 8).
+- [x] Show or hide the timestamps under the bubbles.
+- [x] Show or hide the read-receipt tick under sent bubbles.
+- [x] Bubble settings are part of the mockup: saved with it, restored by
+      Reset, and applied identically to the preview and to both exports.
+      Saves from before the Bubbles card get the defaults, which are the
+      previous look.
+- [x] A word wider than a bubble wraps inside it instead of pushing the
+      bubble off the screen.
+
 ## Language and persistence
 
 - [x] Keep the editor interface in English.
@@ -22,8 +37,8 @@ Keep it updated when a feature is added, removed, or intentionally changed.
 - [x] Remember the mockup language separately from the mockup document.
 - [x] Switch the editor between a light and dark interface theme.
 - [x] Remember the editor theme separately from the mockup document.
-- [x] Persist the mockup, export settings, platform, theme, messages, names, and
-      timestamps in `localStorage`.
+- [x] Persist the mockup, export settings, bubble settings, platform, theme,
+      messages, names, and timestamps in `localStorage`.
 - [x] Reset restores the example conversation without changing the language.
 
 ## Preview
