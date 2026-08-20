@@ -34,6 +34,11 @@ export const translations = {
         "export.aria": "Kies wat je exporteert",
         "export.appOnly": "Alleen de app",
         "export.withFrame": "Met iPhone-frame",
+        "export.size": "Afmetingen",
+        "export.width": "Breedte",
+        "export.height": "Hoogte",
+        "export.hint.app": "De PNG bevat alleen de chat-app.",
+        "export.hint.frame": "Afmetingen gelden alleen voor de app-export.",
         "preview.aria": "Live preview",
         "preview.eyebrow": "Live preview",
         "preview.title": "Zo ziet je chat eruit",
@@ -46,7 +51,6 @@ export const translations = {
         "preview.copy": "Kopieer",
         "preview.copyAria": "Kopieer de PNG naar het klembord",
         "preview.empty": "Je gesprek verschijnt hier.",
-        "chat.today": "Vandaag",
         "toast.exportReady": "Je PNG staat klaar",
         "toast.exportFailed": "Exporteren is mislukt",
         "toast.copied": "PNG gekopieerd naar het klembord",
@@ -98,6 +102,11 @@ export const translations = {
         "export.aria": "Choose what to export",
         "export.appOnly": "App only",
         "export.withFrame": "With iPhone frame",
+        "export.size": "Dimensions",
+        "export.width": "Width",
+        "export.height": "Height",
+        "export.hint.app": "The PNG contains only the chat app.",
+        "export.hint.frame": "Dimensions only apply to app export.",
         "preview.aria": "Live preview",
         "preview.eyebrow": "Live preview",
         "preview.title": "This is what your chat looks like",
@@ -110,7 +119,6 @@ export const translations = {
         "preview.copy": "Copy",
         "preview.copyAria": "Copy the PNG to the clipboard",
         "preview.empty": "Your conversation appears here.",
-        "chat.today": "Today",
         "toast.exportReady": "Your PNG is ready",
         "toast.exportFailed": "Export failed",
         "toast.copied": "PNG copied to clipboard",
@@ -140,7 +148,15 @@ export function normalizeLanguage(value, fallback = DEFAULT_LANGUAGE) {
 export function detectLanguage(languageTags = []) {
     const preferred = String(languageTags[0] ?? "").toLowerCase();
 
-    return preferred.startsWith("nl") ? "nl" : "en";
+    if (preferred.startsWith("nl")) {
+        return "nl";
+    }
+
+    if (preferred.startsWith("en")) {
+        return "en";
+    }
+
+    return DEFAULT_LANGUAGE;
 }
 
 /**

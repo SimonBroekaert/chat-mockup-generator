@@ -2,6 +2,8 @@
 
 Browser-based chat mockup generator for Instagram, Messenger, and WhatsApp-style conversations.
 
+See [FEATURES.md](FEATURES.md) for the current feature checklist and expected behavior.
+
 Static HTML, CSS and ES modules. No build step, no runtime dependencies. [Bun](https://bun.sh) serves and tests it locally — that is the only tool you need.
 
 ## Run locally
@@ -20,9 +22,10 @@ It binds to `127.0.0.1:8765`; override with `PORT=… HOST=… bun run serve`
 
 - Choose the platform (Instagram, Messenger, WhatsApp) and a **light or dark** theme.
 - Set the conversation partner, write messages, pick who says what and when.
-- New messages get a plausible timestamp a few minutes after the previous one and alternate senders.
+- New messages get a timestamp 0–60 minutes after the previous one and alternate senders.
 - Live preview inside an iPhone 17 frame; long conversations scroll and stay pinned to the newest message, like a real chat.
-- **Export as PNG** — either the chat app alone (grows to fit every message) or **inside the iPhone frame** (a fixed screen, pinned to the bottom like a real screenshot).
+- **Export as PNG** — either the chat app alone (using the configured dimensions) or **inside the iPhone frame** (a fixed screen, pinned to the bottom like a real screenshot).
+- Choose the app-only PNG width and height in pixels.
 - **Copy the PNG straight to the clipboard** (browsers with `ClipboardItem` support).
 - The PNG is a snapshot of the live preview, so what you see is exactly what you get.
 - Dutch and English UI; your language choice is remembered separately from the mockup.

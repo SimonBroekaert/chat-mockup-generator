@@ -1,25 +1,25 @@
 import { snapshotElement, canvasToBlob } from "./snapshot.js";
+import { DEFAULT_EXPORT_HEIGHT, DEFAULT_EXPORT_WIDTH } from "./state.js";
 
-export const EXPORT_SCALE = 3;
+export const EXPORT_SCALE = 1;
 
 // CSS pixels. The preview's phone tops out at 760px tall; exporting at that
 // size means the PNG is exactly the preview at its largest, every time,
 // regardless of the window the user happens to have open.
 const FRAME_HEIGHT = 760;
-const SCREEN_WIDTH = 330;
-const SCREEN_MIN_HEIGHT = 740;
 
 /**
  * Renders the current preview to a PNG blob.
  *
- * "App only" grows with the conversation so every message fits.
+ * "App only" uses the configured width and height.
  * "With frame" is a fixed phone: long conversations are pinned to the bottom,
- * exactly like a screenshot of a real device.
+ * exactly like a screenshot of a real device. Dimensions are disabled for this
+ * mode because changing them would distort the device frame.
  *
- * @param {{ phoneShell: HTMLElement, includeFrame: boolean }} options
+ * @param {{ phoneShell: HTMLElement, includeFrame: boolean, width?: number, height?: number }} options
  * @returns {Promise<Blob>}
  */
-export async function renderExportBlob({ phoneShell, includeFrame }) {
+export async function renderExportBlob({ phoneShell, includeFrame, width = DEFAULT_EXPORT_WIDTH, height = DEFAULT_EXPORT_HEIGHT }) {
     const stage = document.createElement("div");
     stage.className = "snapshot-stage";
     stage.setAttribute("aria-hidden", "true");
@@ -30,6 +30,7 @@ export async function renderExportBlob({ phoneShell, includeFrame }) {
     shell.classList.add("is-export");
 
     const screen = shell.querySelector(".phone-screen");
+    const sourceScreen = phoneShell.querySelector(".phone-screen");
     let target = shell;
 
     if (includeFrame) {
@@ -37,12 +38,25 @@ export async function renderExportBlob({ phoneShell, includeFrame }) {
         shell.style.width = "auto";
         stage.appendChild(shell);
     } else {
-        screen.classList.add("is-export-screen");
-        screen.style.width = `${SCREEN_WIDTH}px`;
-        screen.style.height = "auto";
-        screen.style.minHeight = `${SCREEN_MIN_HEIGHT}px`;
-        stage.appendChild(screen);
-        target = screen;
+        const chatScreen = screen.querySelector(".chat-screen");
+
+        if (!chatScreen) {
+            throw new Error("The preview does not contain a chat screen");
+        }
+
+        screen.classList.forEach((className) => {
+            if (className.startsWith("platform-") || className.startsWith("theme-")) {
+                chatScreen.classList.add(className);
+            }
+        });
+
+        copyCustomProperties(sourceScreen, chatScreen);
+        chatScreen.classList.add("is-export-screen");
+        chatScreen.style.width = `${width}px`;
+        chatScreen.style.height = `${height}px`;
+        chatScreen.style.minHeight = `${height}px`;
+        stage.appendChild(chatScreen);
+        target = chatScreen;
     }
 
     document.body.appendChild(stage);
@@ -97,6 +111,18 @@ export function copyBlobToClipboard(blobPromise) {
 function stripIds(root) {
     root.removeAttribute("id");
     root.querySelectorAll("[id]").forEach((element) => element.removeAttribute("id"));
+}
+
+function copyCustomProperties(source, target) {
+    const computed = getComputedStyle(source);
+
+    for (let index = 0; index < computed.length; index += 1) {
+        const property = computed[index];
+
+        if (property.startsWith("--")) {
+            target.style.setProperty(property, computed.getPropertyValue(property));
+        }
+    }
 }
 
 /**

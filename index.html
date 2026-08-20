@@ -147,6 +147,25 @@
                                 <span data-i18n="export.withFrame">Met iPhone-frame</span>
                             </button>
                         </div>
+
+                        <div class="export-size-grid">
+                            <div class="export-size-label" data-i18n="export.size">Afmetingen</div>
+                            <label class="export-size-field" for="export-width">
+                                <span data-i18n="export.width">Breedte</span>
+                                <span class="export-size-input">
+                                    <input id="export-width" type="number" min="280" max="1600" step="1" inputmode="numeric" value="402" />
+                                    <span>px</span>
+                                </span>
+                            </label>
+                            <label class="export-size-field" for="export-height">
+                                <span data-i18n="export.height">Hoogte</span>
+                                <span class="export-size-input">
+                                    <input id="export-height" type="number" min="400" max="2000" step="1" inputmode="numeric" value="650" />
+                                    <span>px</span>
+                                </span>
+                            </label>
+                        </div>
+                        <p class="export-size-hint" id="export-size-hint" data-i18n="export.hint.app">De PNG bevat alleen de chat-app.</p>
                     </section>
                 </div>
 

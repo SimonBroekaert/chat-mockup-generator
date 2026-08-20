@@ -2,11 +2,11 @@ import { expect, test } from "bun:test";
 
 import { createTranslator, detectLanguage, translations } from "../src/i18n.js";
 
-test("detectLanguage only picks Dutch for Dutch browsers", () => {
+test("detectLanguage supports English and defaults to Dutch", () => {
     expect(detectLanguage(["nl-NL", "en"])).toBe("nl");
     expect(detectLanguage(["NL"])).toBe("nl");
     expect(detectLanguage(["en-US", "nl"])).toBe("en");
-    expect(detectLanguage([])).toBe("en");
+    expect(detectLanguage([])).toBe("nl");
 });
 
 test("translate interpolates and falls back", () => {

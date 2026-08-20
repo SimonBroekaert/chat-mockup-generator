@@ -8,6 +8,12 @@ export const THEMES = Object.freeze(["light", "dark"]);
 export const NAME_MAX_LENGTH = 28;
 export const MESSAGE_MAX_LENGTH = 240;
 export const DEFAULT_NAME = "Sophie";
+export const EXPORT_WIDTH_MIN = 280;
+export const EXPORT_WIDTH_MAX = 1600;
+export const EXPORT_HEIGHT_MIN = 400;
+export const EXPORT_HEIGHT_MAX = 2000;
+export const DEFAULT_EXPORT_WIDTH = 402;
+export const DEFAULT_EXPORT_HEIGHT = 650;
 
 const exampleConversations = {
     nl: [
@@ -45,6 +51,8 @@ export function createDefaultState(language = DEFAULT_LANGUAGE) {
         theme: "light",
         includeFrame: false,
         otherName: DEFAULT_NAME,
+        exportWidth: DEFAULT_EXPORT_WIDTH,
+        exportHeight: DEFAULT_EXPORT_HEIGHT,
         messages: createExampleMessages(language),
     };
 }
@@ -77,6 +85,16 @@ export function normalizeTime(value, fallback = getCurrentTime()) {
     return formatTime(hours, minutes);
 }
 
+export function normalizeExportDimension(value, fallback, minimum, maximum) {
+    const dimension = Number(value);
+
+    if (!Number.isFinite(dimension)) {
+        return fallback;
+    }
+
+    return Math.min(maximum, Math.max(minimum, Math.round(dimension)));
+}
+
 /** Adds (or subtracts) whole minutes, wrapping around midnight. */
 export function addMinutes(time, minutes) {
     const [hours, currentMinutes] = normalizeTime(time).split(":").map(Number);
@@ -107,6 +125,8 @@ export function normalizeState(saved, language = DEFAULT_LANGUAGE) {
         theme: THEMES.includes(source.theme) ? source.theme : fallback.theme,
         includeFrame: source.includeFrame === true,
         otherName: hasName ? source.otherName.slice(0, NAME_MAX_LENGTH) : fallback.otherName,
+        exportWidth: normalizeExportDimension(source.exportWidth, fallback.exportWidth, EXPORT_WIDTH_MIN, EXPORT_WIDTH_MAX),
+        exportHeight: normalizeExportDimension(source.exportHeight, fallback.exportHeight, EXPORT_HEIGHT_MIN, EXPORT_HEIGHT_MAX),
         messages: Array.isArray(source.messages) ? source.messages.map(normalizeMessage) : fallback.messages,
     };
 }

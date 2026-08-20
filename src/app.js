@@ -6,11 +6,16 @@ import {
     NAME_MAX_LENGTH,
     MESSAGE_MAX_LENGTH,
     DEFAULT_NAME,
+    EXPORT_WIDTH_MIN,
+    EXPORT_WIDTH_MAX,
+    EXPORT_HEIGHT_MIN,
+    EXPORT_HEIGHT_MAX,
     createDefaultState,
     createMessageId,
     addMinutes,
     getCurrentTime,
     normalizeTime,
+    normalizeExportDimension,
     loadLanguage,
     saveLanguage,
     loadState,
@@ -23,7 +28,7 @@ const TOAST_DURATION = 2800;
 
 const storage = getStorage();
 
-let language = loadLanguage(storage, navigator.languages);
+let language = loadLanguage(storage);
 let t = createTranslator(language);
 const state = loadState(storage, language);
 
@@ -132,6 +137,32 @@ function renderControls() {
     if (callout) {
         callout.textContent = t(state.includeFrame ? "preview.callout.export.frame" : "preview.callout.export.app");
     }
+
+    const exportHint = $("#export-size-hint");
+
+    if (exportHint) {
+        const hintKey = state.includeFrame ? "export.hint.frame" : "export.hint.app";
+
+        exportHint.textContent = t(hintKey);
+        exportHint.dataset.i18n = hintKey;
+    }
+
+    const exportWidth = $("#export-width");
+    const exportHeight = $("#export-height");
+
+    if (exportWidth && document.activeElement !== exportWidth) {
+        exportWidth.value = String(state.exportWidth);
+    }
+
+    if (exportHeight && document.activeElement !== exportHeight) {
+        exportHeight.value = String(state.exportHeight);
+    }
+
+    [exportWidth, exportHeight].forEach((input) => {
+        if (input) {
+            input.disabled = state.includeFrame;
+        }
+    });
 }
 
 function renderPartner() {
@@ -256,7 +287,7 @@ function renderMessages() {
         })
         .join("");
 
-    return `<div class="chat-day-divider">${escapeHtml(t("chat.today"))}</div>${bubbles}`;
+    return bubbles;
 }
 
 function renderComposer() {
@@ -319,7 +350,7 @@ function addMessage() {
         // Conversations alternate; a fresh chat usually opens with the other person.
         sender: previous ? (previous.sender === "me" ? "other" : "me") : "other",
         text: "",
-        time: addMinutes(previous?.time ?? getCurrentTime(), 1 + Math.floor(Math.random() * 4)),
+        time: addMinutes(previous?.time ?? getCurrentTime(), Math.floor(Math.random() * 61)),
     };
 
     state.messages.push(message);
@@ -439,7 +470,12 @@ function setExportBusy(busy) {
 }
 
 function createExportBlob() {
-    return renderExportBlob({ phoneShell: $("#phone-shell"), includeFrame: state.includeFrame });
+    return renderExportBlob({
+        phoneShell: $("#phone-shell"),
+        includeFrame: state.includeFrame,
+        width: state.exportWidth,
+        height: state.exportHeight,
+    });
 }
 
 async function exportPng() {
@@ -569,6 +605,18 @@ function bindEvents() {
 
         if (target.matches("#language-select")) {
             setLanguage(target.value);
+            return;
+        }
+
+        if (target.matches("#export-width, #export-height")) {
+            const isWidth = target.id === "export-width";
+            const stateKey = isWidth ? "exportWidth" : "exportHeight";
+            const minimum = isWidth ? EXPORT_WIDTH_MIN : EXPORT_HEIGHT_MIN;
+            const maximum = isWidth ? EXPORT_WIDTH_MAX : EXPORT_HEIGHT_MAX;
+
+            state[stateKey] = normalizeExportDimension(target.value, state[stateKey], minimum, maximum);
+            target.value = String(state[stateKey]);
+            persist();
             return;
         }
 

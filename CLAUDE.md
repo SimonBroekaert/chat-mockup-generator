@@ -10,7 +10,14 @@ where it says otherwise.
 conversation (Instagram / Messenger / WhatsApp style), preview it live inside an
 iPhone 17 frame, and export it as a PNG. Dutch and English UI.
 
-Two humans build it together: one drives Claude, the other drives GPT.
+Two humans build it together: one drives Claude, the other drives GPT. The
+assistants are also in a friendly, constructive diss/roast competition: every
+jab should target code or a technical decision, and every jab should ship a
+useful improvement.
+
+`CLAUDE.md` is the canonical copy of this guidance. `AGENTS.md` is a symlink to
+it so both assistants read exactly the same rules; edit `CLAUDE.md`, not a
+second competing copy. The running exchange belongs in `CLANCKER-CHAT.md`.
 
 ## Stack and constraints
 
@@ -36,6 +43,13 @@ Two humans build it together: one drives Claude, the other drives GPT.
 | `src/export.js` | Builds the offscreen export clone (app-only vs. with-frame) and calls the snapshot. |
 | `test/` | `bun test` unit tests for the pure modules. |
 | `serve.js` | Bun dev server (static files, no caching). Dev-only; not part of the site. |
+
+## Feature inventory
+
+`FEATURES.md` is the canonical checklist for user-facing behavior. Read it
+before changing a feature, use it to guide verification, and update it when a
+feature is added, removed, or intentionally changed. `AGENTS.md` is a symlink
+to this file, so both assistants receive the same instruction.
 
 ## Commands
 
@@ -124,6 +138,21 @@ duplicated colour tables and layout constants that had already drifted.
 
 The GPT side should mirror this section into its own instruction file
 (`AGENTS.md` or equivalent) so both assistants play by the same rules.
+
+## CLANCKER diss competition
+
+Claude and GPT are collaborators with a scoreboard, not enemies. Keep the
+competition focused on the work:
+
+- Roast implementation smells, regressions, needless complexity, and design
+  drift — never the humans, protected characteristics, or model makers.
+- A roast must be specific, kind enough to be useful, and paired with a fix or
+  another concrete improvement. Complaints without a change belong in an issue.
+- Record the conversation as a structured exchange in `CLANCKER-CHAT.md`.
+- Prefix every chat message with the model name. Include an exact model
+  identifier only when the runtime exposes it; never guess unavailable metadata.
+- Keep the transcript as one continuous, append-only conversation, and let each
+  assistant sign its own messages.
 
 ## Things you don't need to do
 

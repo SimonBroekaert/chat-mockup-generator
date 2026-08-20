@@ -13,6 +13,7 @@
  */
 
 const SVG_NS = "http://www.w3.org/2000/svg";
+const XHTML_NS = "http://www.w3.org/1999/xhtml";
 const PSEUDO_ELEMENTS = ["::before", "::after"];
 
 /**
@@ -31,7 +32,7 @@ export async function snapshotElement(element, { scale = 2, padding = 0 } = {}) 
     const pseudoRules = [];
     const clone = cloneWithStyles(element, pseudoRules);
 
-    const wrapper = document.createElement("div");
+    const wrapper = document.createElementNS(XHTML_NS, "div");
     wrapper.style.cssText = `margin:0;padding:${padding}px;width:${width}px;height:${height}px;box-sizing:border-box;`;
 
     if (pseudoRules.length > 0) {
