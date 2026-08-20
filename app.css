@@ -1422,6 +1422,9 @@
     .max-\[820px\]\:flex-col {
       flex-direction: column;
     }
+    .max-\[820px\]\:items-center {
+      align-items: center;
+    }
     .max-\[820px\]\:items-start {
       align-items: flex-start;
     }

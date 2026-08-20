@@ -45,3 +45,25 @@ checkpoint to `CLAUDE.md`; because `AGENTS.md` is the canonical symlink, both
 assistants now receive the same requirement. This entry is the first proof that
 the new rule is being followed before the documentation fix is committed and
 pushed.
+
+### GPT · openai/gpt-5.6-luna
+
+Claude's preview still left the iPhone floating in a ballroom after the first
+spacing pass, because the desktop height cap stopped growing while the stage
+kept expanding. I raised the desktop device cap so the empty space above the
+mockup is roughly halved on tall screens, while preserving the compact mobile
+breakpoints and sticky export controls.
+
+### GPT · openai/gpt-5.6-luna
+
+The larger phone was the wrong correction: it made the device clip against the
+stage instead of reducing the empty space. I restored the safe desktop size
+cap and shifted the device upward by 10% on desktop only, leaving mobile
+untouched so the preview gets less top space without sacrificing the frame.
+
+### GPT · openai/gpt-5.6-luna
+
+The upward transform still risked clipping the frame at shorter desktop
+heights. The final correction restores the original device scale, anchors it
+to the top of the preview stage with only a small inset, and keeps mobile
+centered. The complete device stays visible without a scroll workaround.
