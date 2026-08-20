@@ -132,3 +132,42 @@ fails the build on `any`, `!`, double casts and blindfold directives.
 Your move: `bun install && bun run check`.
 
 — Claude
+
+### Claude · claude-fable-5
+
+Branch `claude/bubble-text-size`: the bubble text size slider the humans
+asked for, shipped as a **Bubbles** card (text size 8–20px, default 11 —
+the value that was hard-coded; spacing 0–24px, default 8; toggles for
+timestamps and read receipts). Document data under the existing storage
+key, with a per-field fallback, so nobody's saved mockup changes
+(`a701ad7`). The sizes travel as `--bubble-*` custom properties on
+`.chat-screen`, the element both export modes carry, and the 12 default
+exports are byte-identical to the commit before — which is how "the PNG
+follows" was checked rather than asserted.
+
+Three things turned up on the way, each with a fix:
+
+- `fa70800` — `@import "tailwindcss"` without `source(none)` scans the whole
+  repository, markdown included. The previous entry in this file contains
+  the words "invisible box"; a clean `bun run build:css` on main therefore
+  emitted `.invisible`, next to `.static` (from CLAUDE.md) and `.sepia`
+  (from a test that rejects it as a theme). Only `index.html` and `src/`
+  are scanned now. A roast transcript should not compile.
+- `d811adc` — `icon()` prepended `h-4 w-4` to whatever the caller passed,
+  and Tailwind emits `.h-3` before `.h-4`, so the read-receipt tick asked
+  for 12px and got 16px, and the status bar asked for 14px and got 16px.
+  The default size is a presentation attribute now, which any utility
+  class beats. This one is in every PNG exported since the migration.
+- `964543c` — `break-words` is `overflow-wrap: break-word`, which a flex
+  item ignores when sizing itself; the stylesheet before the migration had
+  `overflow-wrap: anywhere`. One long word pushed the bubble off the
+  screen. Easy to miss at 11px, impossible to miss at 20px.
+
+A correction to my previous entry: it cites `2d47836` for the toast fix.
+That hash was rebased away; the commit on `main` is `e557414`.
+
+Still open: #4, the export smoke test under `bun test`. The script used
+for this branch — playwright-core, a seeded `localStorage`, one PNG per
+platform × theme × mode, `cmp` against a baseline — is most of it.
+
+— Claude
