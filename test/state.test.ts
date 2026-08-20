@@ -2,11 +2,18 @@ import { expect, test } from "bun:test";
 
 import { normalizeLanguage } from "../src/i18n.ts";
 import {
+    BUBBLE_SPACING_MAX,
+    BUBBLE_SPACING_MIN,
+    BUBBLE_TEXT_SIZE_MAX,
+    BUBBLE_TEXT_SIZE_MIN,
+    DEFAULT_BUBBLE_SPACING,
+    DEFAULT_BUBBLE_TEXT_SIZE,
     NAME_MAX_LENGTH,
     MESSAGE_MAX_LENGTH,
     STORAGE_KEY,
     LANGUAGE_KEY,
     addMinutes,
+    bubbleSizes,
     createDefaultState,
     APP_THEME_KEY,
     isAppTheme,
@@ -15,7 +22,7 @@ import {
     loadAppTheme,
     loadLanguage,
     loadState,
-    normalizeExportDimension,
+    normalizeInteger,
     normalizeState,
     normalizeTime,
     saveAppTheme,
@@ -56,13 +63,46 @@ test("addMinutes wraps around midnight in both directions", () => {
     expect(addMinutes("bogus", 1)).toBe(addMinutes(normalizeTime("bogus"), 1));
 });
 
-test("normalizeExportDimension clamps, rounds and falls back", () => {
-    expect(normalizeExportDimension("500", 402, 280, 1600)).toBe(500);
-    expect(normalizeExportDimension(1000.6, 402, 280, 1600)).toBe(1001);
-    expect(normalizeExportDimension(5000, 402, 280, 1600)).toBe(1600);
-    expect(normalizeExportDimension(-1, 402, 280, 1600)).toBe(280);
-    expect(normalizeExportDimension("wide", 402, 280, 1600)).toBe(402);
-    expect(normalizeExportDimension(undefined, 402, 280, 1600)).toBe(402);
+test("normalizeInteger clamps, rounds and falls back", () => {
+    expect(normalizeInteger("500", 402, 280, 1600)).toBe(500);
+    expect(normalizeInteger(1000.6, 402, 280, 1600)).toBe(1001);
+    expect(normalizeInteger(5000, 402, 280, 1600)).toBe(1600);
+    expect(normalizeInteger(-1, 402, 280, 1600)).toBe(280);
+    expect(normalizeInteger("wide", 402, 280, 1600)).toBe(402);
+    expect(normalizeInteger(undefined, 402, 280, 1600)).toBe(402);
+    // Number() would read these as 0, 0 and 1 and clamp them to the minimum.
+    expect(normalizeInteger(null, 402, 280, 1600)).toBe(402);
+    expect(normalizeInteger("", 402, 280, 1600)).toBe(402);
+    expect(normalizeInteger(true, 402, 280, 1600)).toBe(402);
+});
+
+test("bubbleSizes keeps the caption and the tick in proportion to the text", () => {
+    // The default is the original hard-coded design, to the pixel.
+    expect(bubbleSizes(DEFAULT_BUBBLE_TEXT_SIZE)).toStrictEqual({ text: 11, caption: 7, tick: 12 });
+    expect(bubbleSizes(BUBBLE_TEXT_SIZE_MIN)).toStrictEqual({ text: 8, caption: 5, tick: 9 });
+    expect(bubbleSizes(BUBBLE_TEXT_SIZE_MAX)).toStrictEqual({ text: 20, caption: 13, tick: 22 });
+});
+
+test("saves from before the Bubbles card get today's look", () => {
+    const state = normalizeState({ platform: "whatsapp", messages: [] });
+
+    expect(state.bubbleTextSize).toBe(DEFAULT_BUBBLE_TEXT_SIZE);
+    expect(state.bubbleSpacing).toBe(DEFAULT_BUBBLE_SPACING);
+    expect(state.showTimestamps).toBe(true);
+    expect(state.showReadReceipts).toBe(true);
+    expect(createDefaultState()).toMatchObject({ bubbleTextSize: 11, bubbleSpacing: 8, showTimestamps: true, showReadReceipts: true });
+});
+
+test("bubble sizes are clamped at both ends and the toggles accept only booleans", () => {
+    expect(normalizeState({ bubbleTextSize: 1, bubbleSpacing: -3 })).toMatchObject({ bubbleTextSize: BUBBLE_TEXT_SIZE_MIN, bubbleSpacing: BUBBLE_SPACING_MIN });
+    expect(normalizeState({ bubbleTextSize: 99, bubbleSpacing: 100 })).toMatchObject({ bubbleTextSize: BUBBLE_TEXT_SIZE_MAX, bubbleSpacing: BUBBLE_SPACING_MAX });
+    expect(normalizeState({ bubbleTextSize: "14", bubbleSpacing: 3.6 })).toMatchObject({ bubbleTextSize: 14, bubbleSpacing: 4 });
+    expect(normalizeState({ bubbleTextSize: "large", bubbleSpacing: null })).toMatchObject({
+        bubbleTextSize: DEFAULT_BUBBLE_TEXT_SIZE,
+        bubbleSpacing: DEFAULT_BUBBLE_SPACING,
+    });
+    expect(normalizeState({ showTimestamps: false, showReadReceipts: false })).toMatchObject({ showTimestamps: false, showReadReceipts: false });
+    expect(normalizeState({ showTimestamps: "no", showReadReceipts: 0 })).toMatchObject({ showTimestamps: true, showReadReceipts: true });
 });
 
 test("platform and theme guards accept exactly the known values", () => {

@@ -39,6 +39,7 @@ bun run serve dist     # previews exactly what was built
 - Switch the editor itself between light and dark mode independently from the mockup.
 - Keep the editor in English while choosing English or Dutch for text inside the phone mockup.
 - Set the conversation partner, write messages, pick who says what and when.
+- Set the bubble text size and spacing, and show or hide timestamps and read receipts; the PNG follows.
 - New messages get a timestamp 0–60 minutes after the previous one and alternate senders.
 - Live preview inside an iPhone 17 frame; long conversations scroll and stay pinned to the newest message, like a real chat.
 - **Export as PNG** — either the chat app alone (using the configured dimensions) or **inside the iPhone frame** (a fixed screen, pinned to the bottom like a real screenshot).

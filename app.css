@@ -254,6 +254,9 @@
   .relative {
     position: relative;
   }
+  .static {
+    position: static;
+  }
   .sticky {
     position: sticky;
   }
@@ -377,6 +380,9 @@
   .aspect-\[402\/874\] {
     aspect-ratio: 402/874;
   }
+  .h-\(--bubble-tick\) {
+    height: var(--bubble-tick);
+  }
   .h-1\.5 {
     height: calc(var(--spacing) * 1.5);
   }
@@ -470,6 +476,9 @@
   .min-h-\[67px\] {
     min-height: 67px;
   }
+  .w-\(--bubble-tick\) {
+    width: var(--bubble-tick);
+  }
   .w-1 {
     width: var(--spacing);
   }
@@ -557,6 +566,9 @@
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
   }
+  .cursor-pointer {
+    cursor: pointer;
+  }
   .resize-y {
     resize: vertical;
   }
@@ -589,6 +601,9 @@
   }
   .justify-center {
     justify-content: center;
+  }
+  .gap-\(--bubble-gap\) {
+    gap: var(--bubble-gap);
   }
   .gap-1 {
     gap: var(--spacing);
@@ -1045,8 +1060,11 @@
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
   }
-  .text-\[7px\] {
-    font-size: 7px;
+  .text-\(length\:--bubble-caption\) {
+    font-size: var(--bubble-caption);
+  }
+  .text-\(length\:--bubble-text\) {
+    font-size: var(--bubble-text);
   }
   .text-\[8px\] {
     font-size: 8px;
@@ -1219,12 +1237,19 @@
   .uppercase {
     text-transform: uppercase;
   }
+  .tabular-nums {
+    --tw-numeric-spacing: tabular-nums;
+    font-variant-numeric: var(--tw-ordinal,) var(--tw-slashed-zero,) var(--tw-numeric-figure,) var(--tw-numeric-spacing,) var(--tw-numeric-fraction,);
+  }
   .no-underline {
     text-decoration-line: none;
   }
   .antialiased {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+  .accent-violet-600 {
+    accent-color: var(--color-violet-600);
   }
   .opacity-0 {
     opacity: 0%;
@@ -1601,6 +1626,9 @@
   .dark\:text-zinc-950:where(.dark, .dark *) {
     color: var(--color-zinc-950);
   }
+  .dark\:accent-violet-400:where(.dark, .dark *) {
+    accent-color: var(--color-violet-400);
+  }
   .dark\:placeholder\:text-zinc-500:where(.dark, .dark *)::placeholder {
     color: var(--color-zinc-500);
   }
@@ -1755,6 +1783,26 @@
   syntax: "*";
   inherits: false;
 }
+@property --tw-ordinal {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-slashed-zero {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-figure {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-spacing {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-numeric-fraction {
+  syntax: "*";
+  inherits: false;
+}
 @property --tw-shadow {
   syntax: "*";
   inherits: false;
@@ -1880,6 +1928,11 @@
       --tw-leading: initial;
       --tw-font-weight: initial;
       --tw-tracking: initial;
+      --tw-ordinal: initial;
+      --tw-slashed-zero: initial;
+      --tw-numeric-figure: initial;
+      --tw-numeric-spacing: initial;
+      --tw-numeric-fraction: initial;
       --tw-shadow: 0 0 #0000;
       --tw-shadow-color: initial;
       --tw-shadow-alpha: 100%;

@@ -4,6 +4,10 @@ import { escapeHtml, html, setHtml, type SafeHtml } from "./html.ts";
 import { createTranslator, isTranslationKey, normalizeLanguage, type Language, type TranslationKey, type Translator } from "./i18n.ts";
 import { hydrateIcons, icon, type IconName } from "./icons.ts";
 import {
+    BUBBLE_SPACING_MAX,
+    BUBBLE_SPACING_MIN,
+    BUBBLE_TEXT_SIZE_MAX,
+    BUBBLE_TEXT_SIZE_MIN,
     DEFAULT_NAME,
     EXPORT_HEIGHT_MAX,
     EXPORT_HEIGHT_MIN,
@@ -12,6 +16,7 @@ import {
     MESSAGE_MAX_LENGTH,
     NAME_MAX_LENGTH,
     addMinutes,
+    bubbleSizes,
     createDefaultState,
     createMessageId,
     getCurrentTime,
@@ -21,7 +26,7 @@ import {
     loadAppTheme,
     loadLanguage,
     loadState,
-    normalizeExportDimension,
+    normalizeInteger,
     normalizeTime,
     saveAppTheme,
     saveLanguage,
@@ -142,6 +147,53 @@ function renderChoice(groupSelector: string, attribute: string, value: string): 
     }
 }
 
+// ---------------------------------------------------------------------------
+// Integer and toggle inputs
+//
+// One row per input: its id, its field in the state and, for integers, the
+// limits normalizeInteger() clamps to. init() copies the limits into the
+// markup, renderControls() writes the state into the inputs and the event
+// handlers read them back — so each limit exists exactly once.
+// ---------------------------------------------------------------------------
+
+type IntegerField = {
+    id: string;
+    key: "exportWidth" | "exportHeight" | "bubbleTextSize" | "bubbleSpacing";
+    minimum: number;
+    maximum: number;
+};
+
+type ToggleField = {
+    id: string;
+    key: "showTimestamps" | "showReadReceipts";
+};
+
+const INTEGER_FIELDS: readonly IntegerField[] = [
+    { id: "export-width", key: "exportWidth", minimum: EXPORT_WIDTH_MIN, maximum: EXPORT_WIDTH_MAX },
+    { id: "export-height", key: "exportHeight", minimum: EXPORT_HEIGHT_MIN, maximum: EXPORT_HEIGHT_MAX },
+    { id: "bubble-text-size", key: "bubbleTextSize", minimum: BUBBLE_TEXT_SIZE_MIN, maximum: BUBBLE_TEXT_SIZE_MAX },
+    { id: "bubble-spacing", key: "bubbleSpacing", minimum: BUBBLE_SPACING_MIN, maximum: BUBBLE_SPACING_MAX },
+];
+
+const TOGGLE_FIELDS: readonly ToggleField[] = [
+    { id: "show-timestamps", key: "showTimestamps" },
+    { id: "show-read-receipts", key: "showReadReceipts" },
+];
+
+function integerFieldOf(input: HTMLInputElement): IntegerField | undefined {
+    return INTEGER_FIELDS.find((field) => field.id === input.id);
+}
+
+function toggleFieldOf(input: HTMLInputElement): ToggleField | undefined {
+    return TOGGLE_FIELDS.find((field) => field.id === input.id);
+}
+
+/** Reads an integer input into the state, clamped to the field's limits, and echoes the clamped value back. */
+function readIntegerField(field: IntegerField, input: HTMLInputElement): void {
+    state[field.key] = normalizeInteger(input.value, state[field.key], field.minimum, field.maximum);
+    input.value = String(state[field.key]);
+}
+
 function renderControls(): void {
     renderChoice("#platform-grid", "data-platform", state.platform);
     renderChoice("#theme-control", "data-theme", state.theme);
@@ -156,20 +208,31 @@ function renderControls(): void {
         exportHint.setAttribute("data-i18n", hintKey);
     }
 
-    const exportWidth = query("#export-width", HTMLInputElement);
-    const exportHeight = query("#export-height", HTMLInputElement);
+    for (const field of INTEGER_FIELDS) {
+        const input = query(`#${field.id}`, HTMLInputElement);
+        const output = query(`#${field.id}-value`, HTMLOutputElement);
 
-    if (exportWidth && document.activeElement !== exportWidth) {
-        exportWidth.value = String(state.exportWidth);
+        if (input && document.activeElement !== input) {
+            input.value = String(state[field.key]);
+        }
+
+        if (output) {
+            output.textContent = String(state[field.key]);
+        }
     }
 
-    if (exportHeight && document.activeElement !== exportHeight) {
-        exportHeight.value = String(state.exportHeight);
-    }
-
-    for (const input of [exportWidth, exportHeight]) {
+    // The dimensions only apply to the app-only export.
+    for (const input of [query("#export-width", HTMLInputElement), query("#export-height", HTMLInputElement)]) {
         if (input) {
             input.disabled = state.includeFrame;
+        }
+    }
+
+    for (const field of TOGGLE_FIELDS) {
+        const input = query(`#${field.id}`, HTMLInputElement);
+
+        if (input) {
+            input.checked = state[field.key];
         }
     }
 }
@@ -400,16 +463,24 @@ function renderMessages(styles: PhoneStyles): SafeHtml {
     return html`${visibleMessages.map((message) => renderBubble(message, styles))}`;
 }
 
+/** The sizes come from the `--bubble-*` custom properties renderPreview() sets on `.chat-screen`. */
 function renderBubble(message: Message, styles: PhoneStyles): SafeHtml {
     const isOutgoing = message.sender === "me";
+    const showTick = isOutgoing && state.showReadReceipts;
+    const caption =
+        state.showTimestamps || showTick
+            ? html`
+                  <div class="mt-0.5 ml-1 mr-1 flex items-center gap-1 text-(length:--bubble-caption) font-medium ${styles.caption}">
+                      ${state.showTimestamps && html`<span>${escapeHtml(message.time)}</span>`}
+                      ${showTick && icon("double-check", `h-(--bubble-tick) w-(--bubble-tick) ${styles.tick}`)}
+                  </div>
+              `
+            : null;
 
     return html`
         <div class="flex max-w-[84%] flex-col ${isOutgoing ? "items-end self-end" : "items-start"}">
-            <div class="rounded-[17px] px-2.5 pb-2 pt-2 text-[11px] font-medium leading-[1.36] whitespace-pre-wrap break-words ${isOutgoing ? `rounded-br-[5px] ${styles.outgoingBubble}` : `rounded-bl-[5px] ${styles.incomingBubble}`}">${escapeHtml(message.text.trim())}</div>
-            <div class="mt-0.5 ml-1 mr-1 flex items-center gap-1 text-[7px] font-medium ${styles.caption}">
-                <span>${escapeHtml(message.time)}</span>
-                ${isOutgoing && icon("double-check", `h-3 w-3 ${styles.tick}`)}
-            </div>
+            <div class="rounded-[17px] px-2.5 pb-2 pt-2 text-(length:--bubble-text) font-medium leading-[1.36] whitespace-pre-wrap break-words ${isOutgoing ? `rounded-br-[5px] ${styles.outgoingBubble}` : `rounded-bl-[5px] ${styles.incomingBubble}`}">${escapeHtml(message.text.trim())}</div>
+            ${caption}
         </div>
     `;
 }
@@ -437,16 +508,22 @@ function renderPreview(): void {
     }
 
     const styles = getPhoneStyles();
+    const sizes = bubbleSizes(state.bubbleTextSize);
 
+    // The bubble sizes travel as custom properties on .chat-screen, read by
+    // static utilities (`text-(length:--bubble-text)`): the html tag refuses a
+    // computed class name, Tailwind could not see one anyway, and .chat-screen
+    // is the element both export modes carry — cloned with the frame, detached
+    // as-is for the app-only PNG.
     phoneScreen.className = `phone-screen platform-${state.platform} theme-${state.theme} flex h-full w-full flex-col overflow-hidden rounded-[49px] font-sans ${styles.screen}`;
     setHtml(
         phoneScreen,
         html`
             ${renderDeviceStatusBar(styles)}
-            <div class="chat-screen flex min-h-0 flex-1 flex-col overflow-hidden">
+            <div class="chat-screen flex min-h-0 flex-1 flex-col overflow-hidden" style="--bubble-text: ${sizes.text}px; --bubble-caption: ${sizes.caption}px; --bubble-tick: ${sizes.tick}px; --bubble-gap: ${state.bubbleSpacing}px">
                 ${renderAppHeader(styles)}
                 <div class="chat-messages flex min-h-0 flex-1 flex-col overflow-y-auto ${styles.messages}">
-                    <div class="chat-messages-inner mt-auto flex flex-col gap-2 px-3 pb-4 pt-3">${renderMessages(styles)}</div>
+                    <div class="chat-messages-inner mt-auto flex flex-col gap-(--bubble-gap) px-3 pb-4 pt-3">${renderMessages(styles)}</div>
                 </div>
                 ${renderComposer(styles)}
             </div>
@@ -818,6 +895,20 @@ function bindEvents(): void {
             return;
         }
 
+        // Sliders update the preview while dragging; the number inputs wait for `change`.
+        if (target instanceof HTMLInputElement && target.type === "range") {
+            const field = integerFieldOf(target);
+
+            if (field) {
+                readIntegerField(field, target);
+                renderControls();
+                renderPreview();
+                scheduleSave();
+            }
+
+            return;
+        }
+
         if (target instanceof HTMLTextAreaElement && target.hasAttribute("data-message-text")) {
             const messageId = messageIdOf(target);
 
@@ -835,16 +926,23 @@ function bindEvents(): void {
             return;
         }
 
-        if (target instanceof HTMLInputElement && (target.id === "export-width" || target.id === "export-height")) {
-            const isWidth = target.id === "export-width";
-            const stateKey = isWidth ? "exportWidth" : "exportHeight";
-            const minimum = isWidth ? EXPORT_WIDTH_MIN : EXPORT_HEIGHT_MIN;
-            const maximum = isWidth ? EXPORT_WIDTH_MAX : EXPORT_HEIGHT_MAX;
+        if (target instanceof HTMLInputElement) {
+            const integerField = integerFieldOf(target);
 
-            state[stateKey] = normalizeExportDimension(target.value, state[stateKey], minimum, maximum);
-            target.value = String(state[stateKey]);
-            persist();
-            return;
+            if (integerField) {
+                readIntegerField(integerField, target);
+                persist();
+                return;
+            }
+
+            const toggleField = toggleFieldOf(target);
+
+            if (toggleField) {
+                state[toggleField.key] = target.checked;
+                renderPreview();
+                persist();
+                return;
+            }
         }
 
         if (!(target instanceof Element)) {
@@ -884,16 +982,13 @@ function init(): void {
         nameInput.maxLength = NAME_MAX_LENGTH;
     }
 
-    // The inputs' limits come from the same constants normalizeExportDimension() clamps with.
-    const ranges = [
-        [query("#export-width", HTMLInputElement), EXPORT_WIDTH_MIN, EXPORT_WIDTH_MAX],
-        [query("#export-height", HTMLInputElement), EXPORT_HEIGHT_MIN, EXPORT_HEIGHT_MAX],
-    ] as const;
+    // The inputs' limits come from the same constants normalizeInteger() clamps with.
+    for (const field of INTEGER_FIELDS) {
+        const input = query(`#${field.id}`, HTMLInputElement);
 
-    for (const [input, minimum, maximum] of ranges) {
         if (input) {
-            input.min = String(minimum);
-            input.max = String(maximum);
+            input.min = String(field.minimum);
+            input.max = String(field.maximum);
         }
     }
 
