@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 
+import { normalizeLanguage } from "../src/i18n.ts";
 import {
     NAME_MAX_LENGTH,
     MESSAGE_MAX_LENGTH,
@@ -7,20 +8,32 @@ import {
     LANGUAGE_KEY,
     addMinutes,
     createDefaultState,
+    APP_THEME_KEY,
+    isAppTheme,
+    isPlatform,
+    isTheme,
+    loadAppTheme,
     loadLanguage,
     loadState,
+    normalizeExportDimension,
     normalizeState,
     normalizeTime,
+    saveAppTheme,
     saveLanguage,
-} from "../src/state.js";
+    type StorageLike,
+} from "../src/state.ts";
 
-function createMemoryStorage(initial = {}) {
+function createMemoryStorage(initial: Record<string, string> = {}): StorageLike & { removeItem(key: string): void } {
     const data = new Map(Object.entries(initial));
 
     return {
-        getItem: (key) => (data.has(key) ? data.get(key) : null),
-        setItem: (key, value) => data.set(key, String(value)),
-        removeItem: (key) => data.delete(key),
+        getItem: (key) => data.get(key) ?? null,
+        setItem: (key, value) => {
+            data.set(key, String(value));
+        },
+        removeItem: (key) => {
+            data.delete(key);
+        },
     };
 }
 
@@ -31,6 +44,7 @@ test("normalizeTime pads and validates", () => {
     expect(normalizeTime("12:60", "11:11")).toBe("11:11");
     expect(normalizeTime("nope", "11:11")).toBe("11:11");
     expect(normalizeTime(undefined, "11:11")).toBe("11:11");
+    expect(normalizeTime(1932, "11:11")).toBe("11:11");
     // Without a fallback it defaults to the current time.
     expect(normalizeTime("garbage")).toMatch(/^\d{2}:\d{2}$/);
 });
@@ -42,30 +56,68 @@ test("addMinutes wraps around midnight in both directions", () => {
     expect(addMinutes("bogus", 1)).toBe(addMinutes(normalizeTime("bogus"), 1));
 });
 
+test("normalizeExportDimension clamps, rounds and falls back", () => {
+    expect(normalizeExportDimension("500", 402, 280, 1600)).toBe(500);
+    expect(normalizeExportDimension(1000.6, 402, 280, 1600)).toBe(1001);
+    expect(normalizeExportDimension(5000, 402, 280, 1600)).toBe(1600);
+    expect(normalizeExportDimension(-1, 402, 280, 1600)).toBe(280);
+    expect(normalizeExportDimension("wide", 402, 280, 1600)).toBe(402);
+    expect(normalizeExportDimension(undefined, 402, 280, 1600)).toBe(402);
+});
+
+test("platform and theme guards accept exactly the known values", () => {
+    expect(isPlatform("whatsapp")).toBe(true);
+    expect(isPlatform("telegram")).toBe(false);
+    expect(isPlatform(undefined)).toBe(false);
+    expect(isTheme("dark")).toBe(true);
+    expect(isTheme("sepia")).toBe(false);
+    expect(isAppTheme("dark")).toBe(true);
+    expect(isAppTheme("system")).toBe(false);
+});
+
+test("the editor theme is a preference stored apart from the mockup", () => {
+    const storage = createMemoryStorage();
+
+    expect(loadAppTheme(storage)).toBe("light");
+    expect(saveAppTheme(storage, "dark")).toBe(true);
+    expect(loadAppTheme(storage)).toBe("dark");
+    expect(storage.getItem(APP_THEME_KEY)).toBe("dark");
+    expect(loadState(storage)).not.toHaveProperty("appTheme");
+
+    storage.setItem(APP_THEME_KEY, "sepia");
+    expect(loadAppTheme(storage)).toBe("light");
+    expect(loadAppTheme(storage, "dark")).toBe("dark");
+});
+
 test("normalizeState repairs corrupt input field by field", () => {
     const state = normalizeState({
         platform: "telegram",
         theme: "sepia",
         includeFrame: "yes",
         otherName: "   ",
+        exportWidth: "huge",
+        exportHeight: 99999,
         messages: [
             { id: 42, sender: "robot", text: 123, time: "99:99" },
             null,
             { id: "keep", sender: "other", text: "x".repeat(MESSAGE_MAX_LENGTH + 50), time: "1:2" },
         ],
     });
+    const [first, , third] = state.messages;
 
     expect(state.platform).toBe("instagram");
     expect(state.theme).toBe("light");
     expect(state.includeFrame).toBe(false);
     expect(state.otherName).toBe("Sophie");
+    expect(state.exportWidth).toBe(402);
+    expect(state.exportHeight).toBe(2000);
     expect(state.messages).toHaveLength(3);
-    expect(state.messages[0].id).toBeString();
-    expect(state.messages[0].sender).toBe("me");
-    expect(state.messages[0].text).toBe("");
-    expect(state.messages[2].id).toBe("keep");
-    expect(state.messages[2].text).toHaveLength(MESSAGE_MAX_LENGTH);
-    expect(state.messages[2].time).toBe("01:02");
+    expect(first?.id).toBeString();
+    expect(first?.sender).toBe("me");
+    expect(first?.text).toBe("");
+    expect(third?.id).toBe("keep");
+    expect(third?.text).toHaveLength(MESSAGE_MAX_LENGTH);
+    expect(third?.time).toBe("01:02");
 });
 
 test("normalizeState keeps valid input and truncates the name", () => {
@@ -80,17 +132,23 @@ test("normalizeState keeps valid input and truncates the name", () => {
     expect(state.messages).toStrictEqual([]);
 });
 
+test("normalizeState tolerates non-object input", () => {
+    expect(normalizeState(null).platform).toBe("instagram");
+    expect(normalizeState("a string").messages).toHaveLength(4);
+    expect(normalizeState(42, "en").messages[0]?.text).toMatch(/tonight/);
+});
+
 test("the example conversation follows the UI language", () => {
-    expect(createDefaultState("nl").messages[0].text).toMatch(/vanavond/);
-    expect(createDefaultState("en").messages[0].text).toMatch(/tonight/);
-    // Unknown languages fall back to Dutch.
-    expect(createDefaultState("xx").messages[0].text).toMatch(/vanavond/);
+    expect(createDefaultState("nl").messages[0]?.text).toMatch(/vanavond/);
+    expect(createDefaultState("en").messages[0]?.text).toMatch(/tonight/);
+    // Unknown languages are normalised to Dutch before they get this far.
+    expect(createDefaultState(normalizeLanguage("xx")).messages[0]?.text).toMatch(/vanavond/);
 });
 
 test("loadState survives unparseable and throwing storage", () => {
     expect(loadState(createMemoryStorage({ [STORAGE_KEY]: "{not json" })).platform).toBe("instagram");
 
-    const hostile = {
+    const hostile: StorageLike = {
         getItem() {
             throw new Error("SecurityError");
         },

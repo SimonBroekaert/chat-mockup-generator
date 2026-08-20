@@ -1,0 +1,39 @@
+{
+    // Browser code only (`src/`). `types: []` means nothing from Bun or Node is
+    // in scope: `Bun.*` or `process.*` in the site is a compile error.
+    // Tooling, tests and scripts use tsconfig.tools.json, which extends this.
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "lib": ["ES2022", "DOM", "DOM.Iterable"],
+        "types": [],
+        "allowImportingTsExtensions": true,
+        "noEmit": true,
+        "skipLibCheck": true,
+
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "allowUnreachableCode": false,
+
+        // Every exported symbol states its type; no inference across files.
+        "declaration": true,
+        "isolatedDeclarations": true,
+
+        // The browser (via serve.ts) and `bun build` transpile one file at a
+        // time without type information, so the source must be valid under
+        // those rules: type-only imports are marked, and TypeScript-only
+        // runtime constructs (enums, namespaces, parameter properties) are out.
+        "isolatedModules": true,
+        "verbatimModuleSyntax": true,
+        "erasableSyntaxOnly": true
+    },
+    "include": ["src"]
+}

@@ -1,4 +1,5 @@
 node_modules/
-bun.lock
+dist/
 bun.lockb
+.idea/
 .DS_Store

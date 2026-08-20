@@ -1,0 +1,11 @@
+{
+    // Everything that runs under Bun rather than in the browser: the dev
+    // server, the scripts and the tests. Same strictness, plus Bun's types.
+    // `test/fixtures` holds files that are *meant* to fail the checks.
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "types": ["bun"]
+    },
+    "include": ["serve.ts", "scripts", "test"],
+    "exclude": ["node_modules", "test/fixtures"]
+}
