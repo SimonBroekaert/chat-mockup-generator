@@ -106,11 +106,19 @@ button {
     height: 31px;
     align-items: center;
     justify-content: center;
-    gap: 3px;
     border-radius: 10px 10px 10px 4px;
     background: linear-gradient(145deg, #7e6bff, #5140d2);
     box-shadow: 0 7px 16px rgba(88, 70, 218, 0.22);
     transform: rotate(-2deg);
+}
+
+.brand-mark .icon {
+    position: relative;
+    z-index: 1;
+    width: 17px;
+    height: 17px;
+    color: #ffffff;
+    stroke-width: 2.1;
 }
 
 .brand-mark::after {
@@ -123,15 +131,6 @@ button {
     background: #5140d2;
     content: "";
     transform: rotate(16deg);
-}
-
-.brand-mark-dot {
-    position: relative;
-    z-index: 1;
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: #ffffff;
 }
 
 .brand-name {

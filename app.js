@@ -145,32 +145,32 @@ const translations = {
     },
 };
 
-const iconPaths = {
-    globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.1 2.4 3.1 5.4 3.1 9S14.1 18.6 12 21c-2.1-2.4-3.1-5.4-3.1-9S9.9 5.4 12 3Z"/>',
-    "chevron-down": '<path d="m6 9 6 6 6-6"/>',
-    download: '<path d="M12 3v11m0 0 4-4m-4 4-4-4M4 19h16"/>',
-    instagram: '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.6" cy="6.6" r=".8" fill="currentColor" stroke="none"/>',
-    messenger: '<path d="M12 3.2c-5.1 0-9 3.6-9 8.4 0 2.6 1.2 4.8 3.3 6.3V21l3.1-1.7c.8.2 1.7.3 2.6.3 5.1 0 9-3.6 9-8.4s-3.9-8-9-8Z"/><path d="m7.2 13.7 3.1-3.3 1.9 1.7 3.7-2  -3.1 3.3-1.9-1.7-3.7 2Z" fill="currentColor" stroke="none"/>',
-    whatsapp: '<path d="M20.4 3.6A11.4 11.4 0 0 0 2.5 17.3L1.8 21l3.8-.7A11.4 11.4 0 0 0 20.4 3.6Z"/><path d="M8.2 7.5c-.2-.4-.4-.4-.7-.4h-.6c-.2 0-.6.1-.8.5-.3.4-1 1-1 2.5s1 2.9 1.2 3.1c.2.4 2 3.2 4.9 4.3 2.4 1 2.4.7 2.9.7.4 0 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1-.1-.1-.3-.2-.7-.4l-1.6-.8c-.4-.2-.6-.1-.8.2l-.6.8c-.2.2-.4.3-.7.1-1.1-.5-1.9-1.1-2.7-2-.4-.5-.7-1-.8-1.3-.1-.3 0-.5.2-.7l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6l-.7-1.7Z" fill="currentColor" stroke="none"/>',
-    "check-circle": '<circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16.5 8.8"/>',
-    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-    plus: '<path d="M12 5v14M5 12h14"/>',
-    trash: '<path d="M4 7h16M9 7V4.5h6V7m-9 0 .8 13h10.4L18 7M10 11v5m4-5v5"/>',
-    smartphone: '<rect x="6.5" y="2.5" width="11" height="19" rx="2.2"/><path d="M10 5h4M11 18.5h2"/>',
-    sparkles: '<path d="m12 3-1.1 4.1L7 8.2l3.9 1.1L12 13l1.1-3.7L17 8.2l-3.9-1.1L12 3ZM19 13l-.7 2.3L16 16l2.3.7L19 19l.7-2.3L22 16l-2.3-.7L19 13ZM5 14l-.6 1.9L2.5 16.5l1.9.6L5 19l.6-1.9 1.9-.6-1.9-.6L5 14Z"/>',
-    back: '<path d="m15 4-8 8 8 8"/>',
-    more: '<circle cx="5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.3" fill="currentColor" stroke="none"/>',
-    video: '<path d="M14.5 8.5h-8a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2ZM16.5 11l4-2v6l-4-2"/>',
-    phone: '<path d="M7 4.5 9.2 4l1.5 3.7-1.9 1.4a13 13 0 0 0 5.1 5.1l1.4-1.9L19 13.8l-.5 2.2a2 2 0 0 1-2.2 1.6A14.4 14.4 0 0 1 5.4 6.7 2 2 0 0 1 7 4.5Z"/>',
-    image: '<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="8" cy="9" r="1.3"/><path d="m4 17 4.5-4 3.4 3 2.2-2 5.4 4"/>',
-    smile: '<circle cx="12" cy="12" r="9"/><path d="M8.5 14.3c.9 1.2 2 1.8 3.5 1.8s2.6-.6 3.5-1.8M8.5 9.5h.1M15.4 9.5h.1"/>',
-    mic: '<rect x="8.5" y="3" width="7" height="12" rx="3.5"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6"/>',
-    send: '<path d="m4 4 16 8-16 8 2.5-8L4 4Zm2.5 8h13"/>',
-    signal: '<path d="M4 19v-2M8 19v-5M12 19v-8M16 19V8M20 19V5"/>',
-    wifi: '<path d="M3.5 9.5a13 13 0 0 1 17 0M6.5 13a8.5 8.5 0 0 1 11 0M9.7 16.4a4 4 0 0 1 4.6 0M12 20h.01"/>',
-    battery: '<rect x="3" y="7" width="17" height="10" rx="2"/><path d="M21 10v4"/><path d="M6 10v4h8v-4Z" fill="currentColor" stroke="none"/>',
-    message: '<path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 9.7 9.7 0 0 1-3.6-.7L4 20l1.2-3.4A7.2 7.2 0 0 1 4 11.5 7.5 7.5 0 0 1 12 4a7.5 7.5 0 0 1 8 7.5Z"/>',
-    "double-check": '<path d="m3.5 12.5 3 3 5.5-6M10 14l2 2 6.5-7"/>',
+const lucideIconNames = {
+    globe: "globe",
+    "chevron-down": "chevron-down",
+    download: "download",
+    instagram: "camera",
+    messenger: "message-circle",
+    whatsapp: "phone",
+    "check-circle": "circle-check",
+    clock: "clock-3",
+    plus: "plus",
+    trash: "trash-2",
+    smartphone: "smartphone",
+    sparkles: "sparkles",
+    back: "chevron-left",
+    more: "ellipsis",
+    video: "video",
+    phone: "phone",
+    image: "image",
+    smile: "smile",
+    mic: "mic",
+    send: "send",
+    signal: "signal",
+    wifi: "wifi",
+    battery: "battery",
+    message: "message-square",
+    "double-check": "check-check",
 };
 
 const state = loadState();
@@ -178,9 +178,67 @@ let saveTimer = null;
 let toastTimer = null;
 
 function icon(name, className = "") {
-    const path = iconPaths[name] ?? iconPaths.message;
+    const iconName = lucideIconNames[name] ?? lucideIconNames.message;
 
-    return `<svg class="icon ${className}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
+    return `<i class="icon ${className}" data-lucide="${iconName}" aria-hidden="true"></i>`;
+}
+
+function hydrateLucideIcons() {
+    if (!window.lucide) {
+        return;
+    }
+
+    window.lucide.createIcons({ icons: window.lucide.icons });
+}
+
+function toLucideIconKey(iconName) {
+    return iconName
+        .split("-")
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join("");
+}
+
+function getLucideIconMarkup(name, color) {
+    const iconName = lucideIconNames[name] ?? lucideIconNames.message;
+    const iconNode = window.lucide?.icons?.[toLucideIconKey(iconName)];
+
+    if (!iconNode) {
+        return "";
+    }
+
+    const children = iconNode
+        .map(([tagName, attributes]) => {
+            const serializedAttributes = Object.entries(attributes)
+                .map(([attributeName, attributeValue]) => `${attributeName}="${attributeValue}"`)
+                .join(" ");
+
+            return `<${tagName} ${serializedAttributes}></${tagName}>`;
+        })
+        .join("");
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${children}</svg>`;
+}
+
+function loadLucideIcon(name, color) {
+    return new Promise((resolve) => {
+        const markup = getLucideIconMarkup(name, color);
+
+        if (!markup) {
+            resolve(null);
+            return;
+        }
+
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = () => resolve(null);
+        image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(markup)}`;
+    });
+}
+
+function drawLucideIcon(context, image, x, y, width, height) {
+    if (image) {
+        context.drawImage(image, x, y, width, height);
+    }
 }
 
 function cloneDefaultState() {
@@ -352,6 +410,8 @@ function hydrateStaticIcons() {
     document.querySelectorAll("[data-icon]").forEach((element) => {
         element.innerHTML = icon(element.dataset.icon);
     });
+
+    hydrateLucideIcons();
 }
 
 function renderPlatformOptions() {
@@ -401,6 +461,8 @@ function renderMessageEditor() {
             `,
         )
         .join("");
+
+    hydrateLucideIcons();
 }
 
 function renderDeviceStatusBar() {
@@ -496,6 +558,8 @@ function renderPreview() {
             ${renderComposer()}
         </div>
     `;
+
+    hydrateLucideIcons();
 }
 
 function renderAll() {
@@ -666,61 +730,6 @@ function wrapCanvasText(context, text, maxWidth) {
     return lines.length > 0 ? lines : [""];
 }
 
-function drawCanvasBack(context) {
-    context.save();
-    context.beginPath();
-    context.moveTo(27, 34);
-    context.lineTo(17, 44);
-    context.lineTo(27, 54);
-    context.strokeStyle = "#27313d";
-    context.lineWidth = 2.5;
-    context.lineCap = "round";
-    context.lineJoin = "round";
-    context.stroke();
-    context.restore();
-}
-
-function drawCanvasHeaderAction(context, type, x, y, color) {
-    context.save();
-    context.strokeStyle = color;
-    context.lineWidth = 2;
-    context.lineCap = "round";
-    context.lineJoin = "round";
-
-    if (type === "video") {
-        roundedRect(context, x, y + 2, 20, 15, 4);
-        context.stroke();
-        context.beginPath();
-        context.moveTo(x + 20, y + 6);
-        context.lineTo(x + 27, y + 3);
-        context.lineTo(x + 27, y + 16);
-        context.lineTo(x + 20, y + 13);
-        context.stroke();
-    }
-
-    if (type === "phone") {
-        context.beginPath();
-        context.moveTo(x + 5, y + 3);
-        context.lineTo(x + 9, y + 2);
-        context.lineTo(x + 12, y + 8);
-        context.lineTo(x + 9, y + 10);
-        context.quadraticCurveTo(x + 13, y + 15, x + 18, y + 17);
-        context.lineTo(x + 20, y + 14);
-        context.lineTo(x + 26, y + 17);
-        context.lineTo(x + 25, y + 21);
-        context.stroke();
-    }
-
-    if (type === "more") {
-        context.beginPath();
-        context.fillStyle = color;
-        [5, 13, 21].forEach((offset) => context.arc(x + offset, y + 11, 2, 0, Math.PI * 2));
-        context.fill();
-    }
-
-    context.restore();
-}
-
 function calculateExportLayout(context, visibleMessages, width) {
     const headerHeight = 79;
     const composerHeight = 70;
@@ -758,7 +767,29 @@ function calculateExportLayout(context, visibleMessages, width) {
     };
 }
 
-function drawExportCanvas(context, width, height, layout) {
+async function loadExportIcons() {
+    const isWhatsApp = state.platform === "whatsapp";
+    const headerColor = isWhatsApp ? "#ffffff" : "#202b39";
+    const composerAction = state.platform === "instagram" ? "mic" : "send";
+    const action = state.platform === "instagram" ? "more" : "phone";
+    const iconsToLoad = {
+        back: ["back", headerColor],
+        video: ["video", headerColor],
+        action: [action, headerColor],
+        doubleCheck: ["double-check", isWhatsApp ? "#719b6e" : "#ffffff"],
+        plus: ["plus", "#838c98"],
+        smile: ["smile", "#838c98"],
+        composerAction: [composerAction, getPlatform().accent],
+    };
+
+    const loadedIcons = await Promise.all(
+        Object.entries(iconsToLoad).map(async ([key, [name, color]]) => [key, await loadLucideIcon(name, color)]),
+    );
+
+    return Object.fromEntries(loadedIcons);
+}
+
+function drawExportCanvas(context, width, height, layout, exportIcons) {
     const platform = getPlatform();
     const isWhatsApp = state.platform === "whatsapp";
     const headerColor = isWhatsApp ? "#075e54" : "#ffffff";
@@ -791,7 +822,7 @@ function drawExportCanvas(context, width, height, layout) {
     context.lineTo(width, layout.headerHeight - 0.5);
     context.stroke();
 
-    drawCanvasBack(context);
+    drawLucideIcon(context, exportIcons.back, 14, 32, 24, 24);
 
     const avatarX = 51;
     const avatarY = 25;
@@ -816,9 +847,8 @@ function drawExportCanvas(context, width, height, layout) {
     context.font = '500 11px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
     context.fillText(getPlatformStatus(), 76, 53);
 
-    const actionColor = isWhatsApp ? "#ffffff" : "#202b39";
-    drawCanvasHeaderAction(context, "video", width - 107, 31, actionColor);
-    drawCanvasHeaderAction(context, state.platform === "instagram" ? "more" : "phone", width - 57, 30, actionColor);
+    drawLucideIcon(context, exportIcons.video, width - 111, 31, 24, 24);
+    drawLucideIcon(context, exportIcons.action, width - 61, 31, 24, 24);
 
     layout.layouts.forEach(({ message, lines, x, y, width: bubbleWidth, height: bubbleHeight }) => {
         const isOutgoing = message.sender === "me";
@@ -839,8 +869,12 @@ function drawExportCanvas(context, width, height, layout) {
         context.fillStyle = isOutgoing && state.platform === "whatsapp" ? "#719b6e" : isOutgoing ? "rgba(255,255,255,.68)" : "#9da5b0";
         context.font = '500 10px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
         context.textAlign = "right";
-        context.fillText(`${message.time}${isOutgoing ? "  ✓✓" : ""}`, x + bubbleWidth - 11, y + bubbleHeight - 8);
+        context.fillText(message.time, x + bubbleWidth - (isOutgoing ? 31 : 11), y + bubbleHeight - 8);
         context.textAlign = "left";
+
+        if (isOutgoing) {
+            drawLucideIcon(context, exportIcons.doubleCheck, x + bubbleWidth - 27, y + bubbleHeight - 20, 17, 17);
+        }
     });
 
     const composerY = height - layout.composerHeight;
@@ -852,9 +886,9 @@ function drawExportCanvas(context, width, height, layout) {
     context.lineTo(width, composerY + 0.5);
     context.stroke();
 
-    context.fillStyle = "#838c98";
-    context.font = '500 23px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-    context.fillText("+", 17, composerY + 43);
+    if (state.platform !== "messenger") {
+        drawLucideIcon(context, exportIcons.plus, 14, composerY + 25, 24, 24);
+    }
 
     const fieldX = state.platform === "messenger" ? 19 : 48;
     const fieldWidth = state.platform === "messenger" ? width - 78 : width - 112;
@@ -867,12 +901,11 @@ function drawExportCanvas(context, width, height, layout) {
     context.font = '500 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
     context.fillText(getPlatformPlaceholder(), fieldX + 14, composerY + 41);
 
-    context.fillStyle = platform.accent;
-    context.font = '600 20px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-    context.fillText(state.platform === "instagram" ? "☺" : "➤", width - 42, composerY + 43);
+    drawLucideIcon(context, exportIcons.smile, width - 81, composerY + 25, 20, 20);
+    drawLucideIcon(context, exportIcons.composerAction, width - 48, composerY + 24, 23, 23);
 }
 
-function exportPng() {
+async function exportPng() {
     const visibleMessages = state.messages.filter((message) => message.text.trim().length > 0);
     const width = 402;
     const measuringCanvas = document.createElement("canvas");
@@ -883,6 +916,7 @@ function exportPng() {
     }
 
     const layout = calculateExportLayout(measuringContext, visibleMessages, width);
+    const exportIcons = await loadExportIcons();
     const scale = 3;
     const canvas = document.createElement("canvas");
     canvas.width = width * scale;
@@ -895,7 +929,7 @@ function exportPng() {
     }
 
     context.scale(scale, scale);
-    drawExportCanvas(context, width, layout.height, layout);
+    drawExportCanvas(context, width, layout.height, layout, exportIcons);
 
     const download = (url) => {
         const link = document.createElement("a");
