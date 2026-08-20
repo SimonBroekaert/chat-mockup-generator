@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="nl">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="description"
+            content="Maak snel realistische chat mockups voor Instagram, Messenger en WhatsApp."
+        />
+        <title>chatframe — Chat mockup generator</title>
+        <link rel="stylesheet" href="app.css" />
+        <script src="app.js" defer></script>
+    </head>
+    <body>
+        <header class="topbar">
+            <div class="topbar-inner">
+                <a class="brand" href="#" aria-label="chatframe home">
+                    <span class="brand-mark" aria-hidden="true">
+                        <span class="brand-mark-dot"></span>
+                        <span class="brand-mark-dot"></span>
+                        <span class="brand-mark-dot"></span>
+                    </span>
+                    <span class="brand-name">chatframe</span>
+                    <span class="beta-badge">BETA</span>
+                </a>
+
+                <div class="topbar-actions">
+                    <label class="language-picker" for="language-select">
+                        <span data-icon="globe" aria-hidden="true"></span>
+                        <select id="language-select" aria-label="Taal van de interface" data-i18n-aria="language.aria">
+                            <option value="nl">NL</option>
+                            <option value="en">EN</option>
+                        </select>
+                        <span data-icon="chevron-down" aria-hidden="true"></span>
+                    </label>
+                    <button class="button button-primary topbar-export" id="export-button" type="button">
+                        <span data-icon="download" aria-hidden="true"></span>
+                        <span data-i18n="top.export">Exporteer PNG</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="generator-layout">
+            <aside class="editor-column" aria-label="Mockup instellingen" data-i18n-aria="editor.aria">
+                <div class="editor-intro">
+                    <div class="eyebrow" data-i18n="intro.eyebrow">Mockup generator</div>
+                    <h1 data-i18n="intro.title">Maak een gesprek dat echt voelt.</h1>
+                    <p data-i18n="intro.description">Stel je chat samen, bekijk hem live op een iPhone 17 en exporteer alleen de app.</p>
+                </div>
+
+                <div class="editor-sections">
+                    <section class="editor-section">
+                        <div class="section-heading">
+                            <div>
+                                <h2 data-i18n="platform.title">Platform</h2>
+                                <p data-i18n="platform.description">Kies de stijl van je gesprek</p>
+                            </div>
+                            <span class="section-index">01</span>
+                        </div>
+
+                        <div class="platform-grid" role="tablist" aria-label="Kies een chat platform" data-i18n-aria="platform.aria">
+                            <button class="platform-option is-active" type="button" data-platform="instagram" role="tab" aria-selected="true">
+                                <span class="platform-mark platform-mark-instagram" aria-hidden="true">
+                                    <span data-icon="instagram"></span>
+                                </span>
+                                <span class="platform-option-label">Instagram</span>
+                            </button>
+                            <button class="platform-option" type="button" data-platform="messenger" role="tab" aria-selected="false">
+                                <span class="platform-mark platform-mark-messenger" aria-hidden="true">
+                                    <span data-icon="messenger"></span>
+                                </span>
+                                <span class="platform-option-label">Messenger</span>
+                            </button>
+                            <button class="platform-option" type="button" data-platform="whatsapp" role="tab" aria-selected="false">
+                                <span class="platform-mark platform-mark-whatsapp" aria-hidden="true">
+                                    <span data-icon="whatsapp"></span>
+                                </span>
+                                <span class="platform-option-label">WhatsApp</span>
+                            </button>
+                        </div>
+                    </section>
+
+                    <section class="editor-section">
+                        <div class="section-heading">
+                            <div>
+                                <h2 data-i18n="partner.title">Gesprekspartner</h2>
+                                <p data-i18n="partner.description">Wie staat er aan de andere kant?</p>
+                            </div>
+                            <span class="section-index">02</span>
+                        </div>
+
+                        <label class="field-label" for="other-name" data-i18n="partner.name">Naam</label>
+                        <div class="input-wrap">
+                            <span class="input-avatar" id="name-avatar" aria-hidden="true">S</span>
+                            <input id="other-name" type="text" value="Sophie" maxlength="28" autocomplete="off" />
+                            <span class="input-status" data-icon="check-circle" aria-hidden="true"></span>
+                        </div>
+                    </section>
+
+                    <section class="editor-section messages-section">
+                        <div class="section-heading section-heading-messages">
+                            <div>
+                                <div class="heading-with-count">
+                                    <h2 data-i18n="messages.title">Berichten</h2>
+                                    <span class="message-count" id="message-count">4</span>
+                                </div>
+                                <p data-i18n="messages.description">Schrijf wie wat zegt</p>
+                            </div>
+                            <span class="section-index">03</span>
+                        </div>
+
+                        <div class="message-editor-list" id="message-editor-list"></div>
+
+                        <button class="add-message-button" id="add-message-button" type="button">
+                            <span class="add-message-icon" data-icon="plus" aria-hidden="true"></span>
+                            <span data-i18n="messages.add">Bericht toevoegen</span>
+                        </button>
+                    </section>
+                </div>
+
+                <div class="editor-footer">
+                    <div class="local-save-state">
+                        <span class="save-dot" aria-hidden="true"></span>
+                        <span id="save-status" data-i18n="save.saved">Lokaal opgeslagen</span>
+                    </div>
+                    <button class="reset-button" id="reset-button" type="button" data-i18n="reset.button">Reset</button>
+                </div>
+            </aside>
+
+            <section class="preview-column" aria-label="Live preview" data-i18n-aria="preview.aria">
+                <div class="preview-toolbar">
+                    <div>
+                        <div class="eyebrow" data-i18n="preview.eyebrow">Live preview</div>
+                        <h2 data-i18n="preview.title">Zo ziet je chat eruit</h2>
+                    </div>
+                    <div class="preview-toolbar-meta">
+                        <span class="device-chip">
+                            <span data-icon="smartphone" aria-hidden="true"></span>
+                            iPhone 17
+                        </span>
+                        <span class="preview-live-indicator"><span></span> Live</span>
+                    </div>
+                </div>
+
+                <div class="preview-stage">
+                    <div class="stage-glow stage-glow-one" aria-hidden="true"></div>
+                    <div class="stage-glow stage-glow-two" aria-hidden="true"></div>
+                    <div class="stage-grid" aria-hidden="true"></div>
+
+                    <div class="preview-callout preview-callout-top" aria-hidden="true">
+                        <span class="callout-line"></span>
+                        <span data-i18n="preview.callout.frame">iPhone 17 frame</span>
+                    </div>
+
+                    <div class="phone-shell" id="phone-shell" data-platform="instagram">
+                        <div class="phone-button phone-button-left phone-button-one" aria-hidden="true"></div>
+                        <div class="phone-button phone-button-left phone-button-two" aria-hidden="true"></div>
+                        <div class="phone-button phone-button-right" aria-hidden="true"></div>
+                        <div class="device-island" aria-hidden="true"></div>
+                        <div class="phone-screen" id="phone-screen"></div>
+                    </div>
+
+                    <div class="preview-callout preview-callout-bottom" aria-hidden="true">
+                        <span data-i18n="preview.callout.export">PNG = alleen de chat-app</span>
+                        <span class="callout-line"></span>
+                    </div>
+                </div>
+
+                <div class="preview-footer">
+                    <div class="preview-tip">
+                        <span class="tip-icon" data-icon="sparkles" aria-hidden="true"></span>
+                        <div>
+                            <strong data-i18n="preview.tip.title">Alles wordt lokaal bewaard</strong>
+                            <span data-i18n="preview.tip.description">Je gesprekken verlaten deze browser niet.</span>
+                        </div>
+                    </div>
+                    <button class="button button-primary preview-export" id="preview-export-button" type="button">
+                        <span data-icon="download" aria-hidden="true"></span>
+                        <span data-i18n="preview.export">Exporteer chat als PNG</span>
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <div class="toast" id="export-toast" role="status" aria-live="polite">
+            <span class="toast-icon" data-icon="check-circle" aria-hidden="true"></span>
+            <span data-i18n="toast.exportReady">Je PNG staat klaar</span>
+        </div>
+    </body>
+</html>
