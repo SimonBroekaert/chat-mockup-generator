@@ -882,6 +882,19 @@ function init(): void {
         nameInput.maxLength = NAME_MAX_LENGTH;
     }
 
+    // The inputs' limits come from the same constants normalizeExportDimension() clamps with.
+    const ranges = [
+        [query("#export-width", HTMLInputElement), EXPORT_WIDTH_MIN, EXPORT_WIDTH_MAX],
+        [query("#export-height", HTMLInputElement), EXPORT_HEIGHT_MIN, EXPORT_HEIGHT_MAX],
+    ] as const;
+
+    for (const [input, minimum, maximum] of ranges) {
+        if (input) {
+            input.min = String(minimum);
+            input.max = String(maximum);
+        }
+    }
+
     const copyButton = query("#copy-button", HTMLElement);
 
     if (copyButton && !canCopyImages()) {
