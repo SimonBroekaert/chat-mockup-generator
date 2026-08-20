@@ -9,13 +9,16 @@
         />
         <title>chatframe — Chat mockup generator</title>
         <link rel="stylesheet" href="app.css" />
-        <script src="node_modules/lucide/dist/umd/lucide.min.js" defer></script>
-        <script src="app.js" defer></script>
+        <link
+            rel="icon"
+            href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%236655e8'/%3E%3Cpath d='M9 10h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-8l-4 3v-3H9a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2z' fill='none' stroke='%23fff' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E"
+        />
+        <script type="module" src="src/app.js"></script>
     </head>
     <body>
         <header class="topbar">
             <div class="topbar-inner">
-                <a class="brand" href="#" aria-label="chatframe home">
+                <a class="brand" href="./" aria-label="chatframe home">
                     <span class="brand-mark" data-icon="message" aria-hidden="true"></span>
                     <span class="brand-name">chatframe</span>
                     <span class="beta-badge">BETA</span>
@@ -30,7 +33,7 @@
                         </select>
                         <span data-icon="chevron-down" aria-hidden="true"></span>
                     </label>
-                    <button class="button button-primary topbar-export" id="export-button" type="button">
+                    <button class="button button-primary topbar-export" id="export-button" type="button" data-export-action>
                         <span data-icon="download" aria-hidden="true"></span>
                         <span data-i18n="top.export">Exporteer PNG</span>
                     </button>
@@ -43,7 +46,7 @@
                 <div class="editor-intro">
                     <div class="eyebrow" data-i18n="intro.eyebrow">Mockup generator</div>
                     <h1 data-i18n="intro.title">Maak een gesprek dat echt voelt.</h1>
-                    <p data-i18n="intro.description">Stel je chat samen, bekijk hem live op een iPhone 17 en exporteer alleen de app.</p>
+                    <p data-i18n="intro.description">Stel je chat samen, bekijk hem live op een iPhone 17 en exporteer hem als PNG.</p>
                 </div>
 
                 <div class="editor-sections">
@@ -56,24 +59,35 @@
                             <span class="section-index">01</span>
                         </div>
 
-                        <div class="platform-grid" role="tablist" aria-label="Kies een chat platform" data-i18n-aria="platform.aria">
-                            <button class="platform-option is-active" type="button" data-platform="instagram" role="tab" aria-selected="true">
+                        <div class="platform-grid" id="platform-grid" role="radiogroup" aria-label="Kies een chat platform" data-i18n-aria="platform.aria">
+                            <button class="platform-option is-active" type="button" data-platform="instagram" role="radio" aria-checked="true">
                                 <span class="platform-mark platform-mark-instagram" aria-hidden="true">
                                     <span data-icon="instagram"></span>
                                 </span>
                                 <span class="platform-option-label">Instagram</span>
                             </button>
-                            <button class="platform-option" type="button" data-platform="messenger" role="tab" aria-selected="false">
+                            <button class="platform-option" type="button" data-platform="messenger" role="radio" aria-checked="false">
                                 <span class="platform-mark platform-mark-messenger" aria-hidden="true">
                                     <span data-icon="messenger"></span>
                                 </span>
                                 <span class="platform-option-label">Messenger</span>
                             </button>
-                            <button class="platform-option" type="button" data-platform="whatsapp" role="tab" aria-selected="false">
+                            <button class="platform-option" type="button" data-platform="whatsapp" role="radio" aria-checked="false">
                                 <span class="platform-mark platform-mark-whatsapp" aria-hidden="true">
                                     <span data-icon="whatsapp"></span>
                                 </span>
                                 <span class="platform-option-label">WhatsApp</span>
+                            </button>
+                        </div>
+
+                        <div class="segmented" id="theme-control" role="radiogroup" aria-label="Kies een thema" data-i18n-aria="theme.aria">
+                            <button class="segmented-option is-active" type="button" data-theme="light" role="radio" aria-checked="true">
+                                <span data-icon="sun" aria-hidden="true"></span>
+                                <span data-i18n="theme.light">Licht</span>
+                            </button>
+                            <button class="segmented-option" type="button" data-theme="dark" role="radio" aria-checked="false">
+                                <span data-icon="moon" aria-hidden="true"></span>
+                                <span data-i18n="theme.dark">Donker</span>
                             </button>
                         </div>
                     </section>
@@ -90,8 +104,7 @@
                         <label class="field-label" for="other-name" data-i18n="partner.name">Naam</label>
                         <div class="input-wrap">
                             <span class="input-avatar" id="name-avatar" aria-hidden="true">S</span>
-                            <input id="other-name" type="text" value="Sophie" maxlength="28" autocomplete="off" />
-                            <span class="input-status" data-icon="check-circle" aria-hidden="true"></span>
+                            <input id="other-name" type="text" value="Sophie" autocomplete="off" placeholder="Naam van je gesprekspartner" data-i18n-placeholder="partner.placeholder" />
                         </div>
                     </section>
 
@@ -113,6 +126,27 @@
                             <span class="add-message-icon" data-icon="plus" aria-hidden="true"></span>
                             <span data-i18n="messages.add">Bericht toevoegen</span>
                         </button>
+                    </section>
+
+                    <section class="editor-section">
+                        <div class="section-heading">
+                            <div>
+                                <h2 data-i18n="export.title">Export</h2>
+                                <p data-i18n="export.description">Wat komt er in de PNG?</p>
+                            </div>
+                            <span class="section-index">04</span>
+                        </div>
+
+                        <div class="segmented" id="export-control" role="radiogroup" aria-label="Kies wat je exporteert" data-i18n-aria="export.aria">
+                            <button class="segmented-option is-active" type="button" data-export="app" role="radio" aria-checked="true">
+                                <span data-icon="image" aria-hidden="true"></span>
+                                <span data-i18n="export.appOnly">Alleen de app</span>
+                            </button>
+                            <button class="segmented-option" type="button" data-export="frame" role="radio" aria-checked="false">
+                                <span data-icon="smartphone" aria-hidden="true"></span>
+                                <span data-i18n="export.withFrame">Met iPhone-frame</span>
+                            </button>
+                        </div>
                     </section>
                 </div>
 
@@ -150,7 +184,7 @@
                         <span data-i18n="preview.callout.frame">iPhone 17 frame</span>
                     </div>
 
-                    <div class="phone-shell" id="phone-shell" data-platform="instagram">
+                    <div class="phone-shell" id="phone-shell">
                         <div class="phone-button phone-button-left phone-button-one" aria-hidden="true"></div>
                         <div class="phone-button phone-button-left phone-button-two" aria-hidden="true"></div>
                         <div class="phone-button phone-button-right" aria-hidden="true"></div>
@@ -159,7 +193,7 @@
                     </div>
 
                     <div class="preview-callout preview-callout-bottom" aria-hidden="true">
-                        <span data-i18n="preview.callout.export">PNG = alleen de chat-app</span>
+                        <span id="export-callout">PNG = alleen de chat-app</span>
                         <span class="callout-line"></span>
                     </div>
                 </div>
@@ -172,17 +206,23 @@
                             <span data-i18n="preview.tip.description">Je gesprekken verlaten deze browser niet.</span>
                         </div>
                     </div>
-                    <button class="button button-primary preview-export" id="preview-export-button" type="button">
-                        <span data-icon="download" aria-hidden="true"></span>
-                        <span data-i18n="preview.export">Exporteer chat als PNG</span>
-                    </button>
+                    <div class="preview-actions">
+                        <button class="button button-secondary" id="copy-button" type="button" data-export-action aria-label="Kopieer de PNG naar het klembord" data-i18n-aria="preview.copyAria">
+                            <span data-icon="copy" aria-hidden="true"></span>
+                            <span data-i18n="preview.copy">Kopieer</span>
+                        </button>
+                        <button class="button button-primary preview-export" id="preview-export-button" type="button" data-export-action>
+                            <span data-icon="download" aria-hidden="true"></span>
+                            <span data-i18n="preview.export">Exporteer als PNG</span>
+                        </button>
+                    </div>
                 </div>
             </section>
         </main>
 
         <div class="toast" id="export-toast" role="status" aria-live="polite">
-            <span class="toast-icon" data-icon="check-circle" aria-hidden="true"></span>
-            <span data-i18n="toast.exportReady">Je PNG staat klaar</span>
+            <span class="toast-icon" id="toast-icon" data-icon="check-circle" aria-hidden="true"></span>
+            <span id="toast-text" data-i18n="toast.exportReady">Je PNG staat klaar</span>
         </div>
     </body>
 </html>
