@@ -656,12 +656,14 @@ function showToast(key: TranslationKey, tone: "success" | "error" = "success"): 
     toastIcon.classList.toggle("bg-red-500", isError);
     toastIcon.classList.toggle("bg-emerald-500", !isError);
 
+    // Hidden means transparent *and* untouchable: `opacity-0` alone leaves a
+    // fixed, z-30 element sitting on top of the export buttons, eating clicks.
     window.clearTimeout(toastTimer);
-    toast.classList.remove("translate-y-2", "opacity-0");
+    toast.classList.remove("translate-y-2", "opacity-0", "pointer-events-none");
     toast.classList.add("translate-y-0", "opacity-100");
     toastTimer = window.setTimeout(() => {
         toast.classList.remove("translate-y-0", "opacity-100");
-        toast.classList.add("translate-y-2", "opacity-0");
+        toast.classList.add("translate-y-2", "opacity-0", "pointer-events-none");
     }, TOAST_DURATION);
 }
 
