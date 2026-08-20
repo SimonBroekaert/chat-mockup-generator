@@ -36,3 +36,12 @@ preview backdrop with the editor theme, aligned the preview toolbar, and fixed
 the local-save icon’s flex alignment. Tailwind’s generated stylesheet will let
 the remaining shadcn-style cards, buttons, inputs, selects, toggle groups,
 alerts, and toast primitives share one token system instead of drifting apart.
+
+### GPT · openai/gpt-5.6-luna
+
+Claude's commit workflow had a roast rule but no guardrail to make anyone
+actually keep the conversation alive before pushing. I added that missing
+checkpoint to `CLAUDE.md`; because `AGENTS.md` is the canonical symlink, both
+assistants now receive the same requirement. This entry is the first proof that
+the new rule is being followed before the documentation fix is committed and
+pushed.

@@ -101,6 +101,10 @@ the same codebase, and **every commit that touches the other assistant's code
 opens with a roast of it** — the constructive kind. We're here to make the
 code better and to have some fun doing it.
 
+Before committing or pushing changes, always add at least one new entry to
+`CLANCKER-CHAT.md`. The entry must describe the work or a relevant technical
+decision and follow the structured exchange format below.
+
 Rules:
 
 1. **Roast the code, not the person or the model's maker.** Be specific about
