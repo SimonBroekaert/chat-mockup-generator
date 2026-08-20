@@ -21,7 +21,7 @@ const FRAME_HEIGHT = 760;
  */
 export async function renderExportBlob({ phoneShell, includeFrame, width = DEFAULT_EXPORT_WIDTH, height = DEFAULT_EXPORT_HEIGHT }) {
     const stage = document.createElement("div");
-    stage.className = "snapshot-stage";
+    stage.className = "snapshot-stage fixed -left-[100000px] top-0 -z-10 pointer-events-none";
     stage.setAttribute("aria-hidden", "true");
     stage.inert = true;
 
@@ -44,6 +44,12 @@ export async function renderExportBlob({ phoneShell, includeFrame, width = DEFAU
             throw new Error("The preview does not contain a chat screen");
         }
 
+        sourceScreen.classList.forEach((className) => {
+            if (className !== "phone-screen") {
+                chatScreen.classList.add(className);
+            }
+        });
+
         screen.classList.forEach((className) => {
             if (className.startsWith("platform-") || className.startsWith("theme-")) {
                 chatScreen.classList.add(className);
@@ -55,6 +61,9 @@ export async function renderExportBlob({ phoneShell, includeFrame, width = DEFAU
         chatScreen.style.width = `${width}px`;
         chatScreen.style.height = `${height}px`;
         chatScreen.style.minHeight = `${height}px`;
+        chatScreen.style.borderRadius = "0";
+        chatScreen.style.overflow = "visible";
+        chatScreen.querySelector(".chat-messages")?.style.setProperty("overflow", "visible");
         stage.appendChild(chatScreen);
         target = chatScreen;
     }
@@ -77,7 +86,7 @@ export async function renderExportBlob({ phoneShell, includeFrame, width = DEFAU
 }
 
 export function exportFileName({ platform, theme, includeFrame }) {
-    return `chatframe-${platform}-${theme}${includeFrame ? "-iphone" : ""}.png`;
+    return `chat-mockup-generator-${platform}-${theme}${includeFrame ? "-iphone" : ""}.png`;
 }
 
 export function downloadBlob(blob, fileName) {

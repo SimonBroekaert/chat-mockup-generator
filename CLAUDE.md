@@ -21,11 +21,12 @@ second competing copy. The running exchange belongs in `CLANCKER-CHAT.md`.
 
 ## Stack and constraints
 
-- **Static site. Zero runtime dependencies. No build step.** `index.html` +
-  `app.css` at the root, ES modules under `src/`. If you find yourself reaching
-  for a bundler, a framework, or a `<script src="node_modules/...">`, stop.
-- **Bun is the dev runtime** — it serves (`serve.js`) and runs the tests. That is
-  tooling, not a dependency: the shipped site is still plain files.
+- **Tailwind CSS site.** `index.html` + generated `app.css` are at the root,
+  Tailwind's source entry point is `src/input.css`, and ES modules live under
+  `src/`. The UI uses Tailwind utility compositions following shadcn patterns;
+  do not reintroduce a hand-written component stylesheet.
+- **Bun is the dev runtime** — it builds Tailwind CSS, serves (`serve.js`) and
+  runs the tests. The browser still receives plain HTML, CSS, and ES modules.
 - Vanilla JS (ES2022+), 4-space indent, double quotes, semicolons. Keep it boring.
 - Must be served over HTTP (ES modules don't load from `file://`).
 
@@ -34,8 +35,9 @@ second competing copy. The running exchange belongs in `CLANCKER-CHAT.md`.
 | Path | Role |
 | --- | --- |
 | `index.html` | Markup. Static strings carry `data-i18n` / `data-i18n-aria` keys. |
-| `app.css` | All styling. Chat-screen colours are CSS custom properties on `.phone-screen`, switched by `platform-*` and `theme-*` classes. |
+| `app.css` | Generated Tailwind CSS. Never hand-edit this file. |
 | `src/app.js` | Entry point: state wiring, rendering, event delegation. |
+| `src/input.css` | Tailwind entry point and source scanning directives. |
 | `src/state.js` | Defaults, normalisation, time helpers, `localStorage` load/save. Pure — no DOM, runs under `bun test`. |
 | `src/i18n.js` | NL/EN translation tables and `createTranslator()`. Dutch is the fallback. |
 | `src/icons.js` | Inline SVG icons (Lucide, ISC; brand marks from Simple Icons, CC0). `icon(name)` returns a string. |
@@ -54,12 +56,14 @@ to this file, so both assistants receive the same instruction.
 ## Commands
 
 ```bash
+bun run build:css  # compile Tailwind CSS once
+bun run watch:css  # rebuild CSS while editing
 bun run serve   # serve.js → http://127.0.0.1:8765  (PORT=… HOST=… to override)
 bun test        # runs test/*.test.js
 ```
 
-There is nothing to `bun install`; the only tool you need is Bun 1.x itself.
-`node_modules/` and `bun.lock` are gitignored and should stay absent.
+Run `bun install` after checking out the project so Tailwind's development
+dependencies are available. `node_modules/` and `bun.lock` remain gitignored.
 
 ## Invariants — read before changing anything
 
@@ -70,14 +74,15 @@ There is nothing to `bun install`; the only tool you need is Bun 1.x itself.
 2. **System fonts only inside `.phone-screen`.** An SVG image cannot fetch web
    fonts, so anything else silently falls back at export time. Use standard
    weights (400 / 500 / 600 / 700); no `540`, `760`, etc.
-3. **UI language is a preference, not document data.** It lives under the
-   `chatframe-language` key; the mockup lives under `chatframe-mockup-v1`.
-   Reset restores the example conversation and must never touch the language.
+3. **UI preferences are not document data.** The selected screenshot language
+   lives under the `chatframe-language` key and the editor theme under
+   `chatframe-app-theme`; the mockup lives under `chatframe-mockup-v1`. Reset
+   restores the example conversation and must never touch either preference.
 4. **Everything user-typed goes through `escapeHtml()`** before it lands in a
    template literal. No exceptions.
-5. **New platform or theme = a CSS variable block**, not a new set of
-   selectors sprinkled through the file. Add the strings to both tables in
-   `i18n.js`; `normalizeState()` must accept the new value.
+5. **New platform or mockup theme = a Tailwind class map**, not a new custom
+   stylesheet. Add the strings to both tables in `i18n.js`; `normalizeState()`
+   must accept the new value.
 6. **Privacy claim is real.** The UI says "your conversations never leave this
    browser". No analytics, no CDN fonts, no third-party requests.
 
@@ -156,8 +161,8 @@ competition focused on the work:
 
 ## Things you don't need to do
 
-- Don't add a framework, TypeScript, a bundler, or a linter config "while
-  you're in there". Propose it in an issue.
+- Don't add a second CSS system or hand-written component stylesheet. Keep the
+  Tailwind/shadcn utility pipeline as the single styling system.
 - Don't commit `node_modules/`, lockfiles, or exported PNGs.
 - Don't redesign the UI unprompted. Bug fixes and the task at hand; design
   changes get discussed first.

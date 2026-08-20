@@ -1,7 +1,7 @@
 // Development server: `bun run serve` (or `bun serve.js`).
 //
 // Serves the repo root as static files so the ES modules load over HTTP.
-// Dev-only — the site itself is static and has no runtime dependencies.
+// Dev-only — the site itself is static after Tailwind has generated app.css.
 // Files are read per request, so edits show up on the next reload.
 
 import { stat } from "node:fs/promises";

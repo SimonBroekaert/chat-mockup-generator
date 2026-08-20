@@ -2,10 +2,16 @@
     "name": "chat-mockup-generator",
     "version": "2.0.0",
     "private": true,
-    "description": "A browser-based chat mockup generator. Static files, no build step, no runtime dependencies.",
+    "description": "A browser-based chat mockup generator powered by Tailwind CSS and shadcn-style primitives.",
     "type": "module",
     "scripts": {
-        "serve": "bun serve.js",
+        "build:css": "tailwindcss -i ./src/input.css -o ./app.css",
+        "watch:css": "tailwindcss -i ./src/input.css -o ./app.css --watch",
+        "serve": "bun run build:css && bun serve.js",
         "test": "bun test"
+    },
+    "devDependencies": {
+        "@tailwindcss/cli": "^4.3.3",
+        "tailwindcss": "^4.3.3"
     }
 }

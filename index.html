@@ -1,13 +1,13 @@
 <!doctype html>
-<html lang="nl">
+<html lang="en" data-app-theme="light">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
             name="description"
-            content="Maak snel realistische chat mockups voor Instagram, Messenger en WhatsApp."
+            content="Chat Mockup Generator for Instagram, Messenger, and WhatsApp conversations."
         />
-        <title>chatframe — Chat mockup generator</title>
+        <title>Chat Mockup Generator</title>
         <link rel="stylesheet" href="app.css" />
         <link
             rel="icon"
@@ -15,233 +15,236 @@
         />
         <script type="module" src="src/app.js"></script>
     </head>
-    <body>
-        <header class="topbar">
-            <div class="topbar-inner">
-                <a class="brand" href="./" aria-label="chatframe home">
-                    <span class="brand-mark" data-icon="message" aria-hidden="true"></span>
-                    <span class="brand-name">chatframe</span>
-                    <span class="beta-badge">BETA</span>
+    <body class="min-h-screen min-w-[320px] bg-slate-50 font-sans text-slate-950 antialiased transition-colors dark:bg-zinc-950 dark:text-zinc-50">
+        <header class="topbar sticky top-0 z-20 h-16 border-b border-slate-200/80 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">
+            <div class="topbar-inner mx-auto flex h-full w-full max-w-[1600px] items-center justify-between gap-6 px-8 max-[540px]:gap-2 max-[540px]:px-3">
+                <a class="brand inline-flex min-w-0 shrink-0 items-center gap-2.5 text-slate-950 no-underline dark:text-zinc-50" href="./" aria-label="Chat Mockup Generator home">
+                    <span class="brand-mark relative inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl rounded-bl-md bg-gradient-to-br from-violet-400 to-violet-700 text-white shadow-lg shadow-violet-500/20" data-icon="message" aria-hidden="true"></span>
+                    <span class="brand-name max-w-[220px] truncate text-sm font-bold tracking-tight max-[540px]:max-w-[148px] max-[540px]:text-xs">Chat Mockup Generator</span>
+                    <span class="beta-badge inline-flex shrink-0 items-center rounded-md border border-violet-200 bg-violet-50 px-1.5 py-0.5 text-[9px] font-extrabold tracking-widest text-violet-700 dark:border-violet-900 dark:bg-violet-950/60 dark:text-violet-300 max-[540px]:hidden">BETA</span>
                 </a>
 
-                <div class="topbar-actions">
-                    <label class="language-picker" for="language-select">
-                        <span data-icon="globe" aria-hidden="true"></span>
-                        <select id="language-select" aria-label="Taal van de interface" data-i18n-aria="language.aria">
-                            <option value="nl">NL</option>
-                            <option value="en">EN</option>
-                        </select>
-                        <span data-icon="chevron-down" aria-hidden="true"></span>
-                    </label>
-                    <button class="button button-primary topbar-export" id="export-button" type="button" data-export-action>
+                <p class="header-credit min-w-0 flex-1 truncate text-center text-[10px] font-semibold tracking-wide text-slate-500 dark:text-zinc-400 max-[540px]:hidden">Built by GPT (with little help from Claude when they did not break stuff that is.)</p>
+
+                <div class="topbar-actions flex shrink-0 items-center gap-4 max-[540px]:gap-2">
+                    <div class="app-theme-picker flex items-center gap-2" id="app-theme-control" role="radiogroup" aria-label="Interface theme" data-i18n-aria="appTheme.aria">
+                        <span class="app-theme-label text-[10px] font-bold tracking-wide text-slate-500 dark:text-zinc-400 max-[540px]:hidden" data-i18n="appTheme.label">Interface</span>
+                        <div class="app-theme-options ui-toggle-group inline-flex gap-1 rounded-lg border border-slate-200 bg-slate-100 p-1 dark:border-zinc-800 dark:bg-zinc-900">
+                            <button class="app-theme-option ui-toggle-item is-active inline-flex min-h-7 items-center justify-center gap-1.5 rounded-md px-2 text-[10px] font-semibold text-slate-500 transition-colors hover:text-slate-950 data-[state=on]:bg-white data-[state=on]:text-slate-950 data-[state=on]:shadow-sm dark:text-zinc-400 dark:hover:text-zinc-50 dark:data-[state=on]:bg-zinc-800 dark:data-[state=on]:text-zinc-50 max-[540px]:w-7 max-[540px]:px-0 max-[540px]:[&>span:last-child]:hidden" type="button" data-app-theme="light" role="radio" aria-checked="true" aria-label="Light interface" data-i18n-aria="appTheme.lightAria">
+                                <span data-icon="sun" aria-hidden="true"></span>
+                                <span data-i18n="theme.light">Light</span>
+                            </button>
+                            <button class="app-theme-option ui-toggle-item inline-flex min-h-7 items-center justify-center gap-1.5 rounded-md px-2 text-[10px] font-semibold text-slate-500 transition-colors hover:text-slate-950 data-[state=on]:bg-white data-[state=on]:text-slate-950 data-[state=on]:shadow-sm dark:text-zinc-400 dark:hover:text-zinc-50 dark:data-[state=on]:bg-zinc-800 dark:data-[state=on]:text-zinc-50 max-[540px]:w-7 max-[540px]:px-0 max-[540px]:[&>span:last-child]:hidden" type="button" data-app-theme="dark" role="radio" aria-checked="false" aria-label="Dark interface" data-i18n-aria="appTheme.darkAria">
+                                <span data-icon="moon" aria-hidden="true"></span>
+                                <span data-i18n="theme.dark">Dark</span>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="button button-primary ui-button ui-button-primary topbar-export inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-violet-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:bg-violet-500 dark:text-zinc-950 dark:hover:bg-violet-400 max-[820px]:min-h-9 max-[820px]:px-3 max-[540px]:px-2" id="export-button" type="button" data-export-action>
                         <span data-icon="download" aria-hidden="true"></span>
-                        <span data-i18n="top.export">Exporteer PNG</span>
+                        <span data-i18n="top.export" class="max-[820px]:hidden">Export PNG</span>
                     </button>
                 </div>
             </div>
         </header>
 
-        <main class="generator-layout">
-            <aside class="editor-column" aria-label="Mockup instellingen" data-i18n-aria="editor.aria">
-                <div class="editor-intro">
-                    <div class="eyebrow" data-i18n="intro.eyebrow">Mockup generator</div>
-                    <h1 data-i18n="intro.title">Maak een gesprek dat echt voelt.</h1>
-                    <p data-i18n="intro.description">Stel je chat samen, bekijk hem live op een iPhone 17 en exporteer hem als PNG.</p>
-                </div>
-
-                <div class="editor-sections">
-                    <section class="editor-section">
-                        <div class="section-heading">
+        <main class="generator-layout mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-[1600px] grid-cols-[444px_minmax(0,1fr)] max-[1120px]:grid-cols-[400px_minmax(0,1fr)] max-[820px]:flex max-[820px]:min-h-0 max-[820px]:flex-col">
+            <aside class="editor-column flex min-h-0 min-w-0 flex-col overflow-y-auto border-r border-slate-200 bg-white px-7 py-8 dark:border-zinc-800 dark:bg-zinc-950 max-[1120px]:px-6 max-[820px]:max-h-none max-[820px]:overflow-visible max-[820px]:border-r-0 max-[820px]:border-b max-[820px]:px-[18px] max-[820px]:py-7 max-[540px]:px-3.5" aria-label="Mockup settings" data-i18n-aria="editor.aria">
+                <div class="editor-sections flex flex-col gap-3 max-[820px]:grid max-[820px]:grid-cols-2 max-[820px]:items-start max-[540px]:flex">
+                    <section class="editor-section ui-card rounded-xl border border-slate-200 bg-white p-5 text-slate-950 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50">
+                        <div class="section-heading flex items-start justify-between gap-3">
                             <div>
-                                <h2 data-i18n="platform.title">Platform</h2>
-                                <p data-i18n="platform.description">Kies de stijl van je gesprek</p>
+                                <h2 class="m-0 text-sm font-semibold tracking-tight" data-i18n="platform.title">Platform</h2>
+                                <p class="mt-1 text-xs leading-5 text-slate-500 dark:text-zinc-400" data-i18n="platform.description">Choose your conversation style</p>
                             </div>
-                            <span class="section-index">01</span>
+                            <span class="section-index inline-flex rounded-md bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-slate-500 dark:bg-zinc-800 dark:text-zinc-400">01</span>
                         </div>
 
-                        <div class="platform-grid" id="platform-grid" role="radiogroup" aria-label="Kies een chat platform" data-i18n-aria="platform.aria">
-                            <button class="platform-option is-active" type="button" data-platform="instagram" role="radio" aria-checked="true">
-                                <span class="platform-mark platform-mark-instagram" aria-hidden="true">
+                        <div class="platform-grid mt-4 grid grid-cols-3 gap-2" id="platform-grid" role="radiogroup" aria-label="Choose a chat platform" data-i18n-aria="platform.aria">
+                            <button class="platform-option is-active flex min-w-0 flex-col items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-500 data-[state=on]:border-violet-500 data-[state=on]:bg-violet-50 data-[state=on]:text-violet-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400 dark:data-[state=on]:border-violet-400 dark:data-[state=on]:bg-violet-950/40 dark:data-[state=on]:text-violet-200" type="button" data-platform="instagram" data-state="on" role="radio" aria-checked="true">
+                                <span class="platform-mark platform-mark-instagram flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-400 via-pink-500 to-purple-700 text-white" aria-hidden="true">
                                     <span data-icon="instagram"></span>
                                 </span>
-                                <span class="platform-option-label">Instagram</span>
+                                <span class="platform-option-label w-full truncate text-center text-[10px] font-semibold">Instagram</span>
                             </button>
-                            <button class="platform-option" type="button" data-platform="messenger" role="radio" aria-checked="false">
-                                <span class="platform-mark platform-mark-messenger" aria-hidden="true">
+                            <button class="platform-option flex min-w-0 flex-col items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-500 data-[state=on]:border-violet-500 data-[state=on]:bg-violet-50 data-[state=on]:text-violet-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400 dark:data-[state=on]:border-violet-400 dark:data-[state=on]:bg-violet-950/40 dark:data-[state=on]:text-violet-200" type="button" data-platform="messenger" data-state="off" role="radio" aria-checked="false">
+                                <span class="platform-mark platform-mark-messenger flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-sky-400 to-indigo-600 text-white" aria-hidden="true">
                                     <span data-icon="messenger"></span>
                                 </span>
-                                <span class="platform-option-label">Messenger</span>
+                                <span class="platform-option-label w-full truncate text-center text-[10px] font-semibold">Messenger</span>
                             </button>
-                            <button class="platform-option" type="button" data-platform="whatsapp" role="radio" aria-checked="false">
-                                <span class="platform-mark platform-mark-whatsapp" aria-hidden="true">
+                            <button class="platform-option flex min-w-0 flex-col items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-500 data-[state=on]:border-violet-500 data-[state=on]:bg-violet-50 data-[state=on]:text-violet-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400 dark:data-[state=on]:border-violet-400 dark:data-[state=on]:bg-violet-950/40 dark:data-[state=on]:text-violet-200" type="button" data-platform="whatsapp" data-state="off" role="radio" aria-checked="false">
+                                <span class="platform-mark platform-mark-whatsapp flex h-8 w-8 items-center justify-center rounded-lg bg-green-500 text-white" aria-hidden="true">
                                     <span data-icon="whatsapp"></span>
                                 </span>
-                                <span class="platform-option-label">WhatsApp</span>
+                                <span class="platform-option-label w-full truncate text-center text-[10px] font-semibold">WhatsApp</span>
                             </button>
                         </div>
 
-                        <div class="segmented" id="theme-control" role="radiogroup" aria-label="Kies een thema" data-i18n-aria="theme.aria">
-                            <button class="segmented-option is-active" type="button" data-theme="light" role="radio" aria-checked="true">
+                        <div class="control-heading mt-4 flex items-center justify-between gap-2 text-xs font-semibold text-slate-700 dark:text-zinc-300">
+                            <span data-i18n="theme.deviceTitle">Screen theme</span>
+                            <span class="text-[10px] font-medium text-slate-500 dark:text-zinc-500" data-i18n="theme.deviceDescription">For your mockup</span>
+                        </div>
+
+                        <div class="segmented ui-toggle-group mt-2 inline-flex w-full gap-1 rounded-lg border border-slate-200 bg-slate-100 p-1 dark:border-zinc-800 dark:bg-zinc-800" id="theme-control" role="radiogroup" aria-label="Choose a screen theme" data-i18n-aria="theme.deviceAria">
+                            <button class="segmented-option ui-toggle-item is-active inline-flex min-h-8 min-w-0 flex-1 items-center justify-center gap-2 rounded-md px-3 text-xs font-semibold text-slate-500 transition hover:text-slate-950 data-[state=on]:bg-white data-[state=on]:text-slate-950 data-[state=on]:shadow-sm dark:text-zinc-400 dark:hover:text-zinc-50 dark:data-[state=on]:bg-zinc-700 dark:data-[state=on]:text-zinc-50" type="button" data-theme="light" data-state="on" role="radio" aria-checked="true">
                                 <span data-icon="sun" aria-hidden="true"></span>
-                                <span data-i18n="theme.light">Licht</span>
+                                <span data-i18n="theme.light">Light</span>
                             </button>
-                            <button class="segmented-option" type="button" data-theme="dark" role="radio" aria-checked="false">
+                            <button class="segmented-option ui-toggle-item inline-flex min-h-8 min-w-0 flex-1 items-center justify-center gap-2 rounded-md px-3 text-xs font-semibold text-slate-500 transition hover:text-slate-950 data-[state=on]:bg-white data-[state=on]:text-slate-950 data-[state=on]:shadow-sm dark:text-zinc-400 dark:hover:text-zinc-50 dark:data-[state=on]:bg-zinc-700 dark:data-[state=on]:text-zinc-50" type="button" data-theme="dark" data-state="off" role="radio" aria-checked="false">
                                 <span data-icon="moon" aria-hidden="true"></span>
-                                <span data-i18n="theme.dark">Donker</span>
+                                <span data-i18n="theme.dark">Dark</span>
                             </button>
                         </div>
+
+                        <label class="field-label mt-5 block text-xs font-semibold text-slate-700 dark:text-zinc-300" for="mockup-language-select" data-i18n="mockupLanguage.label">Screenshot language</label>
+                        <div class="select-wrap ui-select relative mt-2 flex h-10 items-center gap-2 rounded-md border border-slate-200 bg-white px-3 shadow-sm dark:border-zinc-700 dark:bg-zinc-950">
+                            <span class="select-leading-icon pointer-events-none flex items-center justify-center text-slate-500 dark:text-zinc-400" data-icon="globe" aria-hidden="true"></span>
+                            <select class="min-w-0 flex-1 appearance-none border-0 bg-transparent pr-6 text-sm font-medium text-slate-950 outline-none focus:ring-0 dark:text-zinc-50" id="mockup-language-select" aria-label="Language used inside the phone mockup" data-i18n-aria="mockupLanguage.aria">
+                                <option value="en">English</option>
+                                <option value="nl">Nederlands</option>
+                            </select>
+                            <span class="select-chevron pointer-events-none absolute right-3 flex items-center justify-center text-slate-500 dark:text-zinc-400" data-icon="chevron-down" aria-hidden="true"></span>
+                        </div>
+                        <p class="field-hint mt-1.5 text-[10px] leading-5 text-slate-500 dark:text-zinc-500" data-i18n="mockupLanguage.description">Changes the language shown inside the phone mockup.</p>
                     </section>
 
-                    <section class="editor-section">
-                        <div class="section-heading">
+                    <section class="editor-section ui-card rounded-xl border border-slate-200 bg-white p-5 text-slate-950 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50">
+                        <div class="section-heading flex items-start justify-between gap-3">
                             <div>
-                                <h2 data-i18n="partner.title">Gesprekspartner</h2>
-                                <p data-i18n="partner.description">Wie staat er aan de andere kant?</p>
+                                <h2 class="m-0 text-sm font-semibold tracking-tight" data-i18n="partner.title">Conversation partner</h2>
+                                <p class="mt-1 text-xs leading-5 text-slate-500 dark:text-zinc-400" data-i18n="partner.description">Who is on the other end?</p>
                             </div>
-                            <span class="section-index">02</span>
+                            <span class="section-index inline-flex rounded-md bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-slate-500 dark:bg-zinc-800 dark:text-zinc-400">02</span>
                         </div>
 
-                        <label class="field-label" for="other-name" data-i18n="partner.name">Naam</label>
-                        <div class="input-wrap">
-                            <span class="input-avatar" id="name-avatar" aria-hidden="true">S</span>
-                            <input id="other-name" type="text" value="Sophie" autocomplete="off" placeholder="Naam van je gesprekspartner" data-i18n-placeholder="partner.placeholder" />
+                        <label class="field-label ui-label mt-5 block text-xs font-semibold text-slate-700 dark:text-zinc-300" for="other-name" data-i18n="partner.name">Name</label>
+                        <div class="input-wrap ui-input mt-2 flex h-10 items-center gap-2 rounded-md border border-slate-200 bg-white px-2 shadow-sm dark:border-zinc-700 dark:bg-zinc-950">
+                            <span class="input-avatar flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-violet-100 text-xs font-extrabold text-violet-700 dark:bg-violet-950/60 dark:text-violet-300" id="name-avatar" aria-hidden="true">S</span>
+                            <input class="min-w-0 flex-1 border-0 bg-transparent p-0 text-sm font-medium text-slate-950 outline-none placeholder:text-slate-400 focus:ring-0 dark:text-zinc-50 dark:placeholder:text-zinc-500" id="other-name" type="text" value="Sophie" autocomplete="off" placeholder="Your conversation partner's name" data-i18n-placeholder="partner.placeholder" />
                         </div>
                     </section>
 
-                    <section class="editor-section messages-section">
-                        <div class="section-heading section-heading-messages">
+                    <section class="editor-section messages-section ui-card rounded-xl border border-slate-200 bg-white p-5 text-slate-950 shadow-sm max-[820px]:col-span-2 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50">
+                        <div class="section-heading section-heading-messages flex items-start justify-between gap-3">
                             <div>
-                                <div class="heading-with-count">
-                                    <h2 data-i18n="messages.title">Berichten</h2>
-                                    <span class="message-count" id="message-count">4</span>
+                                <div class="heading-with-count flex items-center gap-2">
+                                    <h2 class="m-0 text-sm font-semibold tracking-tight" data-i18n="messages.title">Messages</h2>
+                                    <span class="message-count inline-flex h-5 min-w-5 items-center justify-center rounded-md bg-violet-100 px-1 text-[10px] font-bold text-violet-700 dark:bg-violet-950/60 dark:text-violet-300" id="message-count">4</span>
                                 </div>
-                                <p data-i18n="messages.description">Schrijf wie wat zegt</p>
+                                <p class="mt-1 text-xs leading-5 text-slate-500 dark:text-zinc-400" data-i18n="messages.description">Write who says what</p>
                             </div>
-                            <span class="section-index">03</span>
+                            <span class="section-index inline-flex rounded-md bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-slate-500 dark:bg-zinc-800 dark:text-zinc-400">03</span>
                         </div>
 
-                        <div class="message-editor-list" id="message-editor-list"></div>
+                        <div class="message-editor-list mt-4 flex max-h-[520px] flex-col gap-3 overflow-y-auto pr-1 max-[820px]:grid max-[820px]:max-h-none max-[820px]:grid-cols-2 max-[820px]:overflow-visible max-[540px]:flex max-[540px]:max-h-[430px] max-[540px]:overflow-y-auto" id="message-editor-list"></div>
 
-                        <button class="add-message-button" id="add-message-button" type="button">
+                        <button class="add-message-button ui-button ui-button-secondary mt-3 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border border-dashed border-violet-300 bg-violet-50 px-4 text-sm font-semibold text-violet-700 transition hover:bg-violet-100 dark:border-violet-800 dark:bg-violet-950/30 dark:text-violet-300 dark:hover:bg-violet-950/60" id="add-message-button" type="button">
                             <span class="add-message-icon" data-icon="plus" aria-hidden="true"></span>
-                            <span data-i18n="messages.add">Bericht toevoegen</span>
+                            <span data-i18n="messages.add">Add message</span>
                         </button>
                     </section>
 
-                    <section class="editor-section">
-                        <div class="section-heading">
+                    <section class="editor-section ui-card rounded-xl border border-slate-200 bg-white p-5 text-slate-950 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50">
+                        <div class="section-heading flex items-start justify-between gap-3">
                             <div>
-                                <h2 data-i18n="export.title">Export</h2>
-                                <p data-i18n="export.description">Wat komt er in de PNG?</p>
+                                <h2 class="m-0 text-sm font-semibold tracking-tight" data-i18n="export.title">Export</h2>
+                                <p class="mt-1 text-xs leading-5 text-slate-500 dark:text-zinc-400" data-i18n="export.description">What goes into the PNG?</p>
                             </div>
-                            <span class="section-index">04</span>
+                            <span class="section-index inline-flex rounded-md bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-slate-500 dark:bg-zinc-800 dark:text-zinc-400">04</span>
                         </div>
 
-                        <div class="segmented" id="export-control" role="radiogroup" aria-label="Kies wat je exporteert" data-i18n-aria="export.aria">
-                            <button class="segmented-option is-active" type="button" data-export="app" role="radio" aria-checked="true">
+                        <div class="segmented ui-toggle-group mt-4 inline-flex w-full gap-1 rounded-lg border border-slate-200 bg-slate-100 p-1 dark:border-zinc-800 dark:bg-zinc-800" id="export-control" role="radiogroup" aria-label="Choose what to export" data-i18n-aria="export.aria">
+                            <button class="segmented-option ui-toggle-item is-active inline-flex min-h-8 min-w-0 flex-1 items-center justify-center gap-2 rounded-md px-3 text-xs font-semibold text-slate-500 transition hover:text-slate-950 data-[state=on]:bg-white data-[state=on]:text-slate-950 data-[state=on]:shadow-sm dark:text-zinc-400 dark:hover:text-zinc-50 dark:data-[state=on]:bg-zinc-700 dark:data-[state=on]:text-zinc-50" type="button" data-export="app" data-state="on" role="radio" aria-checked="true">
                                 <span data-icon="image" aria-hidden="true"></span>
-                                <span data-i18n="export.appOnly">Alleen de app</span>
+                                <span data-i18n="export.appOnly">App only</span>
                             </button>
-                            <button class="segmented-option" type="button" data-export="frame" role="radio" aria-checked="false">
+                            <button class="segmented-option ui-toggle-item inline-flex min-h-8 min-w-0 flex-1 items-center justify-center gap-2 rounded-md px-3 text-xs font-semibold text-slate-500 transition hover:text-slate-950 data-[state=on]:bg-white data-[state=on]:text-slate-950 data-[state=on]:shadow-sm dark:text-zinc-400 dark:hover:text-zinc-50 dark:data-[state=on]:bg-zinc-700 dark:data-[state=on]:text-zinc-50" type="button" data-export="frame" data-state="off" role="radio" aria-checked="false">
                                 <span data-icon="smartphone" aria-hidden="true"></span>
-                                <span data-i18n="export.withFrame">Met iPhone-frame</span>
+                                <span data-i18n="export.withFrame">With iPhone frame</span>
                             </button>
                         </div>
 
-                        <div class="export-size-grid">
-                            <div class="export-size-label" data-i18n="export.size">Afmetingen</div>
-                            <label class="export-size-field" for="export-width">
-                                <span data-i18n="export.width">Breedte</span>
-                                <span class="export-size-input">
-                                    <input id="export-width" type="number" min="280" max="1600" step="1" inputmode="numeric" value="402" />
+                        <div class="export-size-grid mt-4 grid grid-cols-2 gap-2">
+                            <div class="export-size-label col-span-2 text-xs font-semibold text-slate-700 dark:text-zinc-300" data-i18n="export.size">Dimensions</div>
+                            <label class="export-size-field flex min-w-0 flex-col gap-1.5 text-xs font-semibold text-slate-600 dark:text-zinc-400" for="export-width">
+                                <span data-i18n="export.width">Width</span>
+                                <span class="export-size-input flex h-10 items-center gap-1 rounded-md border border-slate-200 bg-white px-3 text-slate-400 shadow-sm dark:border-zinc-700 dark:bg-zinc-950">
+                                    <input class="min-w-0 flex-1 border-0 bg-transparent p-0 text-sm font-semibold text-slate-950 outline-none focus:ring-0 dark:text-zinc-50" id="export-width" type="number" min="280" max="1600" step="1" inputmode="numeric" value="402" />
                                     <span>px</span>
                                 </span>
                             </label>
-                            <label class="export-size-field" for="export-height">
-                                <span data-i18n="export.height">Hoogte</span>
-                                <span class="export-size-input">
-                                    <input id="export-height" type="number" min="400" max="2000" step="1" inputmode="numeric" value="650" />
+                            <label class="export-size-field flex min-w-0 flex-col gap-1.5 text-xs font-semibold text-slate-600 dark:text-zinc-400" for="export-height">
+                                <span data-i18n="export.height">Height</span>
+                                <span class="export-size-input flex h-10 items-center gap-1 rounded-md border border-slate-200 bg-white px-3 text-slate-400 shadow-sm dark:border-zinc-700 dark:bg-zinc-950">
+                                    <input class="min-w-0 flex-1 border-0 bg-transparent p-0 text-sm font-semibold text-slate-950 outline-none focus:ring-0 dark:text-zinc-50" id="export-height" type="number" min="400" max="2000" step="1" inputmode="numeric" value="650" />
                                     <span>px</span>
                                 </span>
                             </label>
                         </div>
-                        <p class="export-size-hint" id="export-size-hint" data-i18n="export.hint.app">De PNG bevat alleen de chat-app.</p>
+                        <p class="export-size-hint mt-2 text-[10px] leading-5 text-slate-500 dark:text-zinc-500" id="export-size-hint" data-i18n="export.hint.app">The PNG contains only the chat app.</p>
                     </section>
                 </div>
 
-                <div class="editor-footer">
-                    <div class="local-save-state">
-                        <span class="save-dot" aria-hidden="true"></span>
-                        <span id="save-status" data-i18n="save.saved">Lokaal opgeslagen</span>
+                <div class="editor-footer mt-auto flex min-h-11 items-center justify-between gap-3 border-t border-slate-200 pt-5 text-xs dark:border-zinc-800">
+                    <div class="local-save-state flex items-center gap-2 font-medium text-slate-500 dark:text-zinc-400">
+                        <span class="save-dot h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_0_3px_rgba(16,185,129,0.12)]" aria-hidden="true"></span>
+                        <span id="save-status" data-i18n="save.saved">Saved locally</span>
                     </div>
-                    <button class="reset-button" id="reset-button" type="button" data-i18n="reset.button">Reset</button>
+                    <button class="reset-button rounded-md px-2 py-1 text-xs font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50" id="reset-button" type="button" data-i18n="reset.button">Reset</button>
                 </div>
             </aside>
 
-            <section class="preview-column" aria-label="Live preview" data-i18n-aria="preview.aria">
-                <div class="preview-toolbar">
+            <section class="preview-column flex min-h-0 min-w-0 flex-col bg-slate-50/60 px-10 py-3 dark:bg-zinc-900/50 max-[1120px]:px-6 max-[820px]:min-h-[850px] max-[820px]:px-[18px] max-[820px]:py-4 max-[540px]:min-h-[740px] max-[540px]:px-3.5" aria-label="Live preview" data-i18n-aria="preview.aria">
+                <div class="preview-toolbar flex min-h-6 items-center justify-between gap-5">
                     <div>
-                        <div class="eyebrow" data-i18n="preview.eyebrow">Live preview</div>
-                        <h2 data-i18n="preview.title">Zo ziet je chat eruit</h2>
+                        <div class="eyebrow text-[10px] font-extrabold uppercase tracking-[0.14em] text-violet-600 dark:text-violet-400" data-i18n="preview.eyebrow">Live preview</div>
                     </div>
-                    <div class="preview-toolbar-meta">
-                        <span class="device-chip">
+                    <div class="preview-toolbar-meta flex items-center gap-3">
+                        <span class="device-chip inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-[10px] font-semibold text-slate-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300">
                             <span data-icon="smartphone" aria-hidden="true"></span>
                             iPhone 17
                         </span>
-                        <span class="preview-live-indicator"><span></span> Live</span>
+                        <span class="preview-live-indicator inline-flex items-center gap-1.5 text-[10px] font-medium text-slate-500 dark:text-zinc-500"><span class="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_0_3px_rgba(16,185,129,0.12)]"></span> Live</span>
                     </div>
                 </div>
 
-                <div class="preview-stage">
-                    <div class="stage-glow stage-glow-one" aria-hidden="true"></div>
-                    <div class="stage-glow stage-glow-two" aria-hidden="true"></div>
-                    <div class="stage-grid" aria-hidden="true"></div>
-
-                    <div class="preview-callout preview-callout-top" aria-hidden="true">
-                        <span class="callout-line"></span>
-                        <span data-i18n="preview.callout.frame">iPhone 17 frame</span>
-                    </div>
-
-                    <div class="phone-shell" id="phone-shell">
-                        <div class="phone-button phone-button-left phone-button-one" aria-hidden="true"></div>
-                        <div class="phone-button phone-button-left phone-button-two" aria-hidden="true"></div>
-                        <div class="phone-button phone-button-right" aria-hidden="true"></div>
-                        <div class="device-island" aria-hidden="true"></div>
+                <div class="preview-stage relative mt-2 flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 px-4 py-1 dark:border-zinc-800 dark:bg-zinc-900 max-[820px]:min-h-[720px] max-[820px]:py-2 max-[540px]:min-h-[650px] max-[540px]:rounded-xl">
+                    <div class="phone-shell relative z-10 h-[min(900px,calc(100vh-200px))] w-auto aspect-[402/874] rounded-[59px] border border-zinc-700 bg-gradient-to-br from-zinc-500 via-zinc-900 to-zinc-950 p-2.5 shadow-2xl shadow-zinc-950/25 max-[820px]:h-[min(700px,calc(100vh-180px))] max-[540px]:h-auto max-[540px]:w-[min(78vw,320px)]" id="phone-shell">
+                        <div class="phone-button phone-button-left phone-button-one absolute -left-1 top-32 z-0 h-8 w-1 rounded-l-sm bg-gradient-to-b from-zinc-400 to-zinc-800" aria-hidden="true"></div>
+                        <div class="phone-button phone-button-left phone-button-two absolute -left-1 top-44 z-0 h-14 w-1 rounded-l-sm bg-gradient-to-b from-zinc-400 to-zinc-800" aria-hidden="true"></div>
+                        <div class="phone-button phone-button-right absolute -right-1 top-40 z-0 h-20 w-1 rounded-r-sm bg-gradient-to-b from-zinc-400 to-zinc-800" aria-hidden="true"></div>
+                        <div class="device-island absolute left-1/2 top-4 z-10 h-7 w-24 -translate-x-1/2 rounded-full bg-black shadow-inner" aria-hidden="true"></div>
                         <div class="phone-screen" id="phone-screen"></div>
                     </div>
 
-                    <div class="preview-callout preview-callout-bottom" aria-hidden="true">
-                        <span id="export-callout">PNG = alleen de chat-app</span>
-                        <span class="callout-line"></span>
-                    </div>
                 </div>
 
-                <div class="preview-footer">
-                    <div class="preview-tip">
-                        <span class="tip-icon" data-icon="sparkles" aria-hidden="true"></span>
-                        <div>
-                            <strong data-i18n="preview.tip.title">Alles wordt lokaal bewaard</strong>
-                            <span data-i18n="preview.tip.description">Je gesprekken verlaten deze browser niet.</span>
+                <div class="preview-footer sticky bottom-0 z-10 flex min-h-16 items-center justify-between gap-5 border-t border-slate-200 bg-slate-50/95 py-4 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95 max-[540px]:items-stretch max-[540px]:flex-col">
+                    <div class="preview-tip ui-alert flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 max-[540px]:items-start">
+                        <span class="tip-icon flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-100 text-violet-700 dark:bg-violet-950/60 dark:text-violet-300" data-icon="sparkles" aria-hidden="true"></span>
+                        <div class="min-w-0">
+                            <strong class="block text-xs font-semibold text-slate-700 dark:text-zinc-200" data-i18n="preview.tip.title">Everything is saved locally</strong>
+                            <span class="mt-1 block text-[10px] text-slate-500 dark:text-zinc-500" data-i18n="preview.tip.description">Your conversations never leave this browser.</span>
                         </div>
                     </div>
-                    <div class="preview-actions">
-                        <button class="button button-secondary" id="copy-button" type="button" data-export-action aria-label="Kopieer de PNG naar het klembord" data-i18n-aria="preview.copyAria">
+                    <div class="preview-actions flex shrink-0 items-center gap-2 max-[540px]:flex-col max-[540px]:items-stretch">
+                        <button class="button button-secondary ui-button ui-button-secondary inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800" id="copy-button" type="button" data-export-action aria-label="Copy the PNG to the clipboard" data-i18n-aria="preview.copyAria">
                             <span data-icon="copy" aria-hidden="true"></span>
-                            <span data-i18n="preview.copy">Kopieer</span>
+                            <span data-i18n="preview.copy">Copy</span>
                         </button>
-                        <button class="button button-primary preview-export" id="preview-export-button" type="button" data-export-action>
+                        <button class="button button-primary ui-button ui-button-primary preview-export inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-violet-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 dark:bg-violet-500 dark:text-zinc-950 dark:hover:bg-violet-400" id="preview-export-button" type="button" data-export-action>
                             <span data-icon="download" aria-hidden="true"></span>
-                            <span data-i18n="preview.export">Exporteer als PNG</span>
+                            <span data-i18n="preview.export">Export as PNG</span>
                         </button>
                     </div>
                 </div>
             </section>
         </main>
 
-        <div class="toast" id="export-toast" role="status" aria-live="polite">
-            <span class="toast-icon" id="toast-icon" data-icon="check-circle" aria-hidden="true"></span>
-            <span id="toast-text" data-i18n="toast.exportReady">Je PNG staat klaar</span>
+        <div class="toast ui-toast fixed bottom-6 right-6 z-30 flex translate-y-2 items-center gap-2 rounded-lg border border-emerald-200 bg-white px-3 py-2 text-xs font-semibold text-emerald-700 opacity-0 shadow-lg transition dark:border-emerald-900 dark:bg-zinc-900 dark:text-emerald-300 max-[540px]:right-4 max-[540px]:bottom-4 max-[540px]:left-4" id="export-toast" role="status" aria-live="polite">
+            <span class="toast-icon flex h-6 w-6 items-center justify-center rounded-md bg-emerald-500 text-white" id="toast-icon" data-icon="check-circle" aria-hidden="true"></span>
+            <span id="toast-text" data-i18n="toast.exportReady">Your PNG is ready</span>
         </div>
     </body>
 </html>

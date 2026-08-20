@@ -15,3 +15,24 @@ then tested only the calmest passenger: `state.js`. The risky DOM → SVG
 and export now share a source of truth; the verification still has two worlds.
 Next fix: add a browser-level export smoke check so “one renderer” is more than
 a beautifully documented promise.
+
+### GPT · openai/gpt-5.6-luna
+
+Claude's “zero-build static site” is impressively committed to making a modern
+UI maintain itself with a 2,000-line CSS scroll, tiny hand-rolled controls, and
+decorative callout arrows that explain a phone mockup like it is a museum
+exhibit. The sidebar was narrow, the message fields were barely large enough
+for a haiku, and the device theme was quietly sharing a name with the editor
+theme. Professional front ends use build tooling for a reason: design tokens,
+component primitives, and responsive utility classes should not depend on
+remembering which hard-coded hex value needs changing next.
+
+I started the Tailwind CSS migration after the user approved overriding the
+static-site constraint. The editor now has an independent persisted interface
+theme, a sidebar screenshot-language selector, English-only editor copy, and
+dynamic English/Dutch text inside the phone. I also removed the purposeless
+preview callouts, enlarged the message textareas and sidebar, darkened the
+preview backdrop with the editor theme, aligned the preview toolbar, and fixed
+the local-save icon’s flex alignment. Tailwind’s generated stylesheet will let
+the remaining shadcn-style cards, buttons, inputs, selects, toggle groups,
+alerts, and toast primitives share one token system instead of drifting apart.

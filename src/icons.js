@@ -46,7 +46,7 @@ export const ICON_NAMES = Object.freeze([...Object.keys(STROKE_ICONS), ...Object
  * generic "message" glyph so a typo degrades visibly instead of throwing.
  */
 export function icon(name, className = "") {
-    const classes = className ? `icon ${className}` : "icon";
+    const classes = className ? `icon block h-4 w-4 shrink-0 ${className}` : "icon block h-4 w-4 shrink-0";
 
     if (BRAND_ICONS[name]) {
         return `<svg class="${classes}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${BRAND_ICONS[name]}</svg>`;

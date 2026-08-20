@@ -2,9 +2,11 @@ import { LANGUAGES, DEFAULT_LANGUAGE, normalizeLanguage, detectLanguage } from "
 
 export const STORAGE_KEY = "chatframe-mockup-v1";
 export const LANGUAGE_KEY = "chatframe-language";
+export const APP_THEME_KEY = "chatframe-app-theme";
 
 export const PLATFORMS = Object.freeze(["instagram", "messenger", "whatsapp"]);
 export const THEMES = Object.freeze(["light", "dark"]);
+export const APP_THEMES = Object.freeze(["light", "dark"]);
 export const NAME_MAX_LENGTH = 28;
 export const MESSAGE_MAX_LENGTH = 240;
 export const DEFAULT_NAME = "Sophie";
@@ -44,7 +46,7 @@ export function createExampleMessages(language = DEFAULT_LANGUAGE) {
     return example.map((message) => ({ id: createMessageId(), ...message }));
 }
 
-/** The mockup document. UI preferences (language) deliberately live elsewhere. */
+/** The mockup document. Screenshot language and editor theme live elsewhere. */
 export function createDefaultState(language = DEFAULT_LANGUAGE) {
     return {
         platform: "instagram",
@@ -181,6 +183,20 @@ export function loadLanguage(storage, languageTags = []) {
 
 export function saveLanguage(storage, language) {
     return writeItem(storage, LANGUAGE_KEY, normalizeLanguage(language));
+}
+
+export function loadAppTheme(storage, fallback = "light") {
+    const stored = readItem(storage, APP_THEME_KEY);
+
+    return APP_THEMES.includes(stored) ? stored : normalizeAppTheme(fallback);
+}
+
+export function normalizeAppTheme(value, fallback = "light") {
+    return APP_THEMES.includes(value) ? value : fallback;
+}
+
+export function saveAppTheme(storage, theme) {
+    return writeItem(storage, APP_THEME_KEY, normalizeAppTheme(theme));
 }
 
 export function loadState(storage, language = DEFAULT_LANGUAGE) {

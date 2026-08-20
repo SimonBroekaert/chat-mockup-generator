@@ -6,7 +6,7 @@ Keep it updated when a feature is added, removed, or intentionally changed.
 ## Conversation editor
 
 - [x] Choose Instagram, Messenger, or WhatsApp styling.
-- [x] Choose light or dark chat styling.
+- [x] Choose light or dark chat styling independently from the editor theme.
 - [x] Change the other person's name and avatar initial.
 - [x] Add, remove, and edit messages.
 - [x] Choose whether each message is from **You** or the other person.
@@ -17,9 +17,11 @@ Keep it updated when a feature is added, removed, or intentionally changed.
 
 ## Language and persistence
 
-- [x] Dutch is the first-run default.
-- [x] Switch the interface between Dutch and English.
-- [x] Remember the language separately from the mockup document.
+- [x] Keep the editor interface in English.
+- [x] Choose English or Dutch for text inside the phone mockup.
+- [x] Remember the mockup language separately from the mockup document.
+- [x] Switch the editor between a light and dark interface theme.
+- [x] Remember the editor theme separately from the mockup document.
 - [x] Persist the mockup, export settings, platform, theme, messages, names, and
       timestamps in `localStorage`.
 - [x] Reset restores the example conversation without changing the language.
@@ -28,8 +30,7 @@ Keep it updated when a feature is added, removed, or intentionally changed.
 
 - [x] Render a live iPhone 17 preview.
 - [x] Keep long conversations pinned to the newest message in the preview.
-- [x] Keep platform and theme colors in CSS variables so preview and export stay
-      visually consistent.
+- [x] Keep platform and theme classes shared between preview and export.
 - [x] Do not render a day divider such as “Vandaag” or “Today”.
 
 ## PNG export
@@ -46,6 +47,7 @@ Keep it updated when a feature is added, removed, or intentionally changed.
 ## Local development checks
 
 ```bash
+bun run build:css
 bun run serve
 bun test
 ```
